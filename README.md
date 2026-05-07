@@ -32,20 +32,20 @@ El equipo aplica la metodología ágil Scrum adaptada a 5 sprints. Nota: Los rol
    
 3. **Ejecución del Backend (.NET):**
    ```bash
-   cd src/backend # O la ruta correspondiente donde se aloje la API
+   cd src/backend
    dotnet restore
    dotnet run
    ```
 
 4. **Ejecución del Frontend:**
    ```bash
-   cd src/frontend # O la ruta correspondiente
+   cd src/frontend
    npm install
    npm run dev
    ```
 
 ## URL deploy + credenciales
-* **URL de Deploy:** [Enlace pendiente de añadir]
+* **URL de Deploy:** https://presentech-d2cphbhkduh8b6h0.centralus-01.azurewebsites.net/
 * **Credenciales de prueba (Docente):**
   * **Email:** `docente_prueba@feyalegria.edu.ec`
   * **Contraseña:** `Docente123!`
