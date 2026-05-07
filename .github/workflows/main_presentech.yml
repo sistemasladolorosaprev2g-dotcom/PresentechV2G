@@ -24,12 +24,10 @@ jobs:
           dotnet-version: '10.x'
 
       - name: Build with dotnet
-        working-directory: ./src/backend
-        run: dotnet build --configuration Release
+        run: dotnet build src/backend/Presentech.Api/Presentech.Api.csproj --configuration Release
 
       - name: dotnet publish
-        working-directory: ./src/backend
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish src/backend/Presentech.Api/Presentech.Api.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4

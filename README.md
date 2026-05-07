@@ -45,7 +45,7 @@ El equipo aplica la metodología ágil Scrum adaptada a 5 sprints. Nota: Los rol
    ```
 
 ## URL deploy + credenciales
-* **URL de Deploy:** https://presentech-d2cphbhkduh8b6h0.centralus-01.azurewebsites.net/
+* **URL de Deploy:** https://white-mud-0f8769f10.7.azurestaticapps.net/
 * **Credenciales de prueba (Docente):**
   * **Email:** `docente_prueba@feyalegria.edu.ec`
   * **Contraseña:** `Docente123!`
