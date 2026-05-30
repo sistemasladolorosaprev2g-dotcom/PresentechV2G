@@ -7,6 +7,7 @@ namespace Presentech.DataAccess.Repositories.Interfaces
         // =========================
         // CONSULTAS
         // =========================
+        Task<IReadOnlyList<ProfesorEntity>> ObtenerTodosAsync(CancellationToken cancellationToken = default);
         Task<ProfesorEntity?> ObtenerPorIdAsync(int id_profesor, CancellationToken cancellationToken = default);
         Task<ProfesorEntity?> ObtenerPorCorreoAsync(string correo_institucional, CancellationToken cancellationToken = default);
         Task<ProfesorEntity?> ObtenerParaActualizarAsync(int id_profesor, CancellationToken cancellationToken = default);
@@ -16,6 +17,7 @@ namespace Presentech.DataAccess.Repositories.Interfaces
         // =========================
         Task AgregarAsync(ProfesorEntity profesor, CancellationToken cancellationToken = default);
         void Actualizar(ProfesorEntity profesor);
+        void Eliminar(ProfesorEntity profesor);
 
         // =========================
         // VALIDACIONES

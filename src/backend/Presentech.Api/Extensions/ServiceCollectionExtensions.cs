@@ -18,7 +18,14 @@ public static class ServiceCollectionExtensions
         // BASE DE DATOS
         // =========================
         services.AddDbContext<PresentechDbContext>(options =>
-            options.UseNpgsql(configuration.GetConnectionString("PresentechDb")));
+            options.UseNpgsql(configuration.GetConnectionString("PresentechDb"),
+                sqlOptions =>
+                {
+                    sqlOptions.EnableRetryOnFailure(
+                        maxRetryCount: 5,
+                        maxRetryDelay: TimeSpan.FromSeconds(10),
+                        errorCodesToAdd: null);
+                }));
 
         // =========================
         // UNIT OF WORK
@@ -34,6 +41,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IClaseDataService, ClaseDataService>();
         services.AddScoped<IClaseHorarioDataService, ClaseHorarioDataService>();
         services.AddScoped<IAsistenciaDataService, AsistenciaDataService>();
+        services.AddScoped<IAdministradorDataService, AdministradorDataService>();
 
         // =========================
         // JWT SETTINGS (para AuthService)
@@ -49,6 +57,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IClaseService, ClaseService>();
         services.AddScoped<IAsistenciaService, AsistenciaService>();
         services.AddScoped<IEstudianteService, EstudianteService>();
+        services.AddScoped<IAdminService, AdminService>();
 
         return services;
     }

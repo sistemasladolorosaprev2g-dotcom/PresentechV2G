@@ -15,5 +15,6 @@ namespace Presentech.DataAccess.Repositories.Interfaces
         // =========================
         Task AgregarAsync(ParaleloEntity paralelo, CancellationToken cancellationToken = default);
         void Actualizar(ParaleloEntity paralelo);
+        void Eliminar(ParaleloEntity paralelo);
     }
 }

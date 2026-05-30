@@ -17,6 +17,15 @@ namespace Presentech.DataAccess.Repositories
         // =========================
         // CONSULTAS
         // =========================
+        public async Task<IReadOnlyList<ProfesorEntity>> ObtenerTodosAsync(CancellationToken cancellationToken = default)
+        {
+            return await _context.Profesores
+                .AsNoTracking()
+                .OrderBy(p => p.apellidos)
+                .ThenBy(p => p.nombres)
+                .ToListAsync(cancellationToken);
+        }
+
         public async Task<ProfesorEntity?> ObtenerPorIdAsync(int id_profesor, CancellationToken cancellationToken = default)
         {
             return await _context.Profesores
@@ -47,6 +56,13 @@ namespace Presentech.DataAccess.Repositories
 
         public void Actualizar(ProfesorEntity profesor)
         {
+            _context.Profesores.Update(profesor);
+        }
+
+        public void Eliminar(ProfesorEntity profesor)
+        {
+            // Soft delete — solo marca como inactivo
+            profesor.activo = false;
             _context.Profesores.Update(profesor);
         }
 

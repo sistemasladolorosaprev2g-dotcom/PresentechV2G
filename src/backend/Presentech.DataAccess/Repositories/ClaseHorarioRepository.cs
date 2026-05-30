@@ -48,5 +48,10 @@ namespace Presentech.DataAccess.Repositories
         {
             _context.ClasesHorario.Update(horario);
         }
+
+        public void Eliminar(ClaseHorarioEntity horario)
+        {
+            _context.ClasesHorario.Remove(horario);
+        }
     }
 }

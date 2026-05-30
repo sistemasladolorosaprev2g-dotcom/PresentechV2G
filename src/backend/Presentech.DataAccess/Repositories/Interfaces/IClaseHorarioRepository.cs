@@ -15,5 +15,6 @@ namespace Presentech.DataAccess.Repositories.Interfaces
         // =========================
         Task AgregarAsync(ClaseHorarioEntity horario, CancellationToken cancellationToken = default);
         void Actualizar(ClaseHorarioEntity horario);
+        void Eliminar(ClaseHorarioEntity horario);
     }
 }

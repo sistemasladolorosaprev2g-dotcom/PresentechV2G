@@ -45,5 +45,11 @@ namespace Presentech.DataAccess.Repositories
         {
             _context.Paralelos.Update(paralelo);
         }
+
+        public void Eliminar(ParaleloEntity paralelo)
+        {
+            paralelo.activo = false;
+            _context.Paralelos.Update(paralelo);
+        }
     }
 }

@@ -39,6 +39,11 @@ public class ExceptionHandlingMiddleware
             await WriteErrorAsync(context, HttpStatusCode.Unauthorized,
                 ApiErrorResponse.Fail(ex.Message));
         }
+        catch (ConflictException ex)
+        {
+            await WriteErrorAsync(context, HttpStatusCode.Conflict,
+                ApiErrorResponse.Fail(ex.Message));
+        }
         catch (BusinessException ex)
         {
             await WriteErrorAsync(context, HttpStatusCode.BadRequest,

@@ -14,6 +14,7 @@ namespace Presentech.DataAccess.Context
         // =========================
         // ENTIDADES DEL DOMINIO
         // =========================
+        public DbSet<AdministradorEntity> Administradores => Set<AdministradorEntity>();
         public DbSet<ProfesorEntity> Profesores => Set<ProfesorEntity>();
         public DbSet<EstudianteEntity> Estudiantes => Set<EstudianteEntity>();
         public DbSet<ParaleloEntity> Paralelos => Set<ParaleloEntity>();
@@ -26,6 +27,7 @@ namespace Presentech.DataAccess.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.ApplyConfiguration(new AdministradorConfiguration());
             modelBuilder.ApplyConfiguration(new ProfesorConfiguration());
             modelBuilder.ApplyConfiguration(new EstudianteConfiguration());
             modelBuilder.ApplyConfiguration(new ParaleloConfiguration());

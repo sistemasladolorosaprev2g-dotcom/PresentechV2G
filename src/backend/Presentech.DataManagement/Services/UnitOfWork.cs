@@ -12,6 +12,7 @@ namespace Presentech.DataManagement.Services
         // =========================
         // REPOSITORIES — DOMINIO PRESENTECH
         // =========================
+        private IAdministradorRepository?          _administradorRepository;
         private IProfesorRepository?           _profesorRepository;
         private IEstudianteRepository?         _estudianteRepository;
         private IParaleloRepository?           _paraleloRepository;
@@ -28,6 +29,9 @@ namespace Presentech.DataManagement.Services
         // =========================
         // PROPIEDADES — REPOSITORIES
         // =========================
+        public IAdministradorRepository AdministradorRepository =>
+            _administradorRepository ??= new AdministradorRepository(_context);
+
         public IProfesorRepository ProfesorRepository =>
             _profesorRepository ??= new ProfesorRepository(_context);
 

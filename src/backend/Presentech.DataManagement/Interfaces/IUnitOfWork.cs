@@ -7,6 +7,7 @@ namespace Presentech.DataManagement.Interfaces
         // =========================
         // REPOSITORIES — DOMINIO PRESENTECH
         // =========================
+        IAdministradorRepository AdministradorRepository { get; }
         IProfesorRepository ProfesorRepository { get; }
         IEstudianteRepository EstudianteRepository { get; }
         IParaleloRepository ParaleloRepository { get; }
