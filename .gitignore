@@ -58,6 +58,25 @@ TestResults/
 # Opciones de usuario locales
 *.local
 
+# Configuraciones y secretos de appsettings
+appsettings.json
+appsettings.*.json
+
+# Visual Studio / .NET Core / .NET 10
+.vs/
+.vscode/
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.dbmdl
+*.jfm
+*.pfx
+*.publishsettings
+# dotnet watch cache
+.hotreload/
+
 # =========================
 # SO / Archivos de sistema
 # =========================

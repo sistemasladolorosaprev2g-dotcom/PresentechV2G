@@ -1,0 +1,86 @@
+import { api } from './api'
+
+// ── Auth ──────────────────────────────────────────────────────────────────────
+export async function loginAdmin(credentials) {
+  const response = await api.post('/admin/auth/login', credentials)
+  return response.data
+}
+
+// ── Profesores ────────────────────────────────────────────────────────────────
+export async function obtenerProfesores() {
+  const response = await api.get('/admin/profesores')
+  return response.data
+}
+
+export async function obtenerProfesor(id) {
+  const response = await api.get(`/admin/profesores/${id}`)
+  return response.data
+}
+
+export async function crearProfesor(data) {
+  const response = await api.post('/admin/profesores', data)
+  return response.data
+}
+
+export async function actualizarProfesor(id, data) {
+  const response = await api.put(`/admin/profesores/${id}`, data)
+  return response.data
+}
+
+export async function eliminarProfesor(id) {
+  const response = await api.delete(`/admin/profesores/${id}`)
+  return response.data
+}
+
+// ── Paralelos ─────────────────────────────────────────────────────────────────
+export async function obtenerParalelos() {
+  const response = await api.get('/admin/paralelos')
+  return response.data
+}
+
+export async function crearParalelo(data) {
+  const response = await api.post('/admin/paralelos', data)
+  return response.data
+}
+
+export async function actualizarParalelo(id, data) {
+  const response = await api.put(`/admin/paralelos/${id}`, data)
+  return response.data
+}
+
+export async function eliminarParalelo(id) {
+  const response = await api.delete(`/admin/paralelos/${id}`)
+  return response.data
+}
+
+// ── Clases ────────────────────────────────────────────────────────────────────
+export async function obtenerClases() {
+  const response = await api.get('/admin/clases')
+  return response.data
+}
+
+export async function crearClase(data) {
+  const response = await api.post('/admin/clases', data)
+  return response.data
+}
+
+export async function actualizarClase(id, data) {
+  const response = await api.put(`/admin/clases/${id}`, data)
+  return response.data
+}
+
+export async function eliminarClase(id) {
+  const response = await api.delete(`/admin/clases/${id}`)
+  return response.data
+}
+
+// ── Horarios ──────────────────────────────────────────────────────────────────
+export async function agregarHorario(idClase, data) {
+  const response = await api.post(`/admin/clases/${idClase}/horarios`, data)
+  return response.data
+}
+
+export async function eliminarHorario(idClase, idHorario) {
+  const response = await api.delete(`/admin/clases/${idClase}/horarios/${idHorario}`)
+  return response.data
+}

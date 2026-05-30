@@ -6,10 +6,25 @@ import { CalendarioPage } from './pages/CalendarioPage'
 import { ClasesPage } from './pages/ClasesPage'
 import { LoginPage } from './pages/LoginPage'
 import { PlaceholderPage } from './pages/PlaceholderPage.jsx'
+import { AdminRoute } from './routes/AdminRoute.jsx'
+import { AdminLoginPage } from './pages/AdminLoginPage'
+import { AdminPage } from './pages/AdminPage'
 
 function App() {
   return (
     <Routes>
+      {/* Admin Routes */}
+      <Route path="/admin/login" element={<AdminLoginPage />} />
+      <Route
+        path="/admin"
+        element={
+          <AdminRoute>
+            <AdminPage />
+          </AdminRoute>
+        }
+      />
+
+      {/* Docentes Routes */}
       <Route path="/login" element={<LoginPage />} />
       <Route
         path="/"
