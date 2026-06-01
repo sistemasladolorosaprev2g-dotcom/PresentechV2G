@@ -140,7 +140,7 @@ export function AsistenciaPage() {
         ) : null}
 
         {isLoading ? (
-          <div className="flex min-h-64 items-center justify-center rounded-lg border border-border bg-card">
+          <div className="flex min-h-64 items-center justify-center rounded-lg rounded-xl border border-border/50 bg-card/60 backdrop-blur-sm shadow-sm transition-all duration-300">
             <Spinner size="lg" />
           </div>
         ) : null}
@@ -162,7 +162,7 @@ export function AsistenciaPage() {
         ) : null}
 
         {!isLoading && !asistencias.length && !error ? (
-          <div className="rounded-lg border border-border bg-card p-5 text-center shadow-sm">
+          <div className="rounded-lg rounded-xl border border-border/50 bg-card/60 backdrop-blur-sm shadow-sm transition-all duration-300 p-5 text-center shadow-sm">
             <h2 className="text-lg font-medium text-foreground">
               No hay estudiantes activos
             </h2>

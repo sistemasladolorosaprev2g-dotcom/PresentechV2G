@@ -100,3 +100,24 @@ export async function asignarParaleloEstudiante(idEstudiante, idParalelo) {
   const response = await api.post(`/admin/estudiantes/${idEstudiante}/paralelos/${idParalelo}`)
   return response.data
 }
+
+// ── Materias ──────────────────────────────────────────────────────────────────
+export async function obtenerMaterias() {
+  const response = await api.get('/admin/materias')
+  return response.data
+}
+
+export async function crearMateria(data) {
+  const response = await api.post('/admin/materias', data)
+  return response.data
+}
+
+export async function actualizarMateria(id, data) {
+  const response = await api.put(`/admin/materias/${id}`, data)
+  return response.data
+}
+
+export async function eliminarMateria(id) {
+  const response = await api.delete(`/admin/materias/${id}`)
+  return response.data
+}

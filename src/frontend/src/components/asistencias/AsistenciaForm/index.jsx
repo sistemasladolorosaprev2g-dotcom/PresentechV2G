@@ -18,7 +18,7 @@ export function AsistenciaForm({
   return (
     <>
       <form className="grid gap-4" onSubmit={onSubmit}>
-        <section className="rounded-lg border border-border bg-card p-4 shadow-sm">
+        <section className="rounded-lg rounded-xl border border-border/50 bg-card/60 backdrop-blur-sm shadow-sm transition-all duration-300 p-4 shadow-sm">
           <p className="mb-3 text-sm font-medium text-foreground">Resumen</p>
           <div className="flex flex-wrap gap-4">
             <SummaryItem colorClass="bg-success" label="Presentes" value={resumen.presentes} />
@@ -29,7 +29,7 @@ export function AsistenciaForm({
           </div>
         </section>
 
-        <section className="rounded-lg border border-border bg-card p-4 shadow-sm">
+        <section className="rounded-lg rounded-xl border border-border/50 bg-card/60 backdrop-blur-sm shadow-sm transition-all duration-300 p-4 shadow-sm">
           <label className="block text-left text-sm font-medium text-foreground">
             Observaciones de la sesión (opcional)
             <textarea

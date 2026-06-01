@@ -133,14 +133,14 @@ export function CalendarioPage() {
         ) : null}
 
         {isLoading ? (
-          <div className="flex min-h-64 items-center justify-center rounded-lg border border-border bg-card">
+          <div className="flex min-h-64 items-center justify-center rounded-lg rounded-xl border border-border/50 bg-card/60 backdrop-blur-sm shadow-sm transition-all duration-300">
             <Spinner size="lg" />
           </div>
         ) : null}
 
         {!isLoading && clase ? (
           <>
-            <section className="mb-6 rounded-lg border border-border bg-card p-4">
+            <section className="mb-6 rounded-lg rounded-xl border border-border/50 bg-card/60 backdrop-blur-sm shadow-sm transition-all duration-300 p-4">
               <p className="mb-3 text-sm font-medium text-foreground">Horarios asignados</p>
               <div className="flex flex-wrap gap-2">
                 {clase.horarios.map((horario) => (

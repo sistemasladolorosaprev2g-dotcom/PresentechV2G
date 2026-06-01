@@ -1,7 +1,8 @@
-import { Plus, Trash2, Link as LinkIcon, RefreshCw, Upload } from 'lucide-react'
+import { Plus, Trash2, Link as LinkIcon, RefreshCw, Upload, FileSpreadsheet, Camera } from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 import { Button, Input, Modal, Spinner, SearchableSelect } from '../../components/common'
 import { ImportarExcelButton } from '../../components/estudiantes/ImportarExcelButton'
+import { EscanearListaButton } from '../../components/estudiantes/EscanearListaButton'
 import { getApiData, getApiErrorMessage } from '../../services/api'
 import { obtenerEstudiantes, crearEstudiante, asignarParaleloEstudiante, obtenerParalelos } from '../../services/adminService'
 
@@ -22,9 +23,8 @@ export function EstudiantesTab() {
   const [paraleloIdSeleccionado, setParaleloIdSeleccionado] = useState('')
   const [isAssigning, setIsAssigning] = useState(false)
 
-  // Importar excel multiple
+  // Importar estudiantes (Modal)
   const [isImportModalOpen, setIsImportModalOpen] = useState(false)
-  const [importParaleloId, setImportParaleloId] = useState('')
 
   const loadData = useCallback(async () => {
     setError('')
@@ -99,10 +99,10 @@ export function EstudiantesTab() {
           <h3 className="text-lg font-medium text-foreground">Estudiantes</h3>
           <p className="text-sm text-muted-foreground">Gestiona los estudiantes y su asignación a paralelos.</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <Button variant="secondary" onClick={() => setIsImportModalOpen(true)}>
-            <Upload className="h-4 w-4" />
-            Importar de Excel
+            <Upload className="h-4 w-4 mr-2" />
+            Importar
           </Button>
           <Button onClick={() => setIsCrearModalOpen(true)}>
             <Plus className="h-4 w-4" />
@@ -125,7 +125,8 @@ export function EstudiantesTab() {
           <Spinner size="lg" />
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-lg border border-border">
+        <div className="overflow-hidden rounded-xl border border-border/50 bg-card/60 backdrop-blur-sm shadow-sm transition-all duration-300">
+          <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
             <thead className="bg-muted/50 text-xs uppercase text-muted-foreground">
               <tr>
@@ -161,6 +162,7 @@ export function EstudiantesTab() {
               )}
             </tbody>
           </table>
+          </div>
         </div>
       )}
 
@@ -215,50 +217,43 @@ export function EstudiantesTab() {
           </div>
         </div>
       </Modal>
-
-      {/* Modal Importar Excel */}
+      {/* Modal Importar Estudiantes */}
       <Modal
         isOpen={isImportModalOpen}
         onClose={() => setIsImportModalOpen(false)}
-        title="Importar estudiantes desde Excel"
+        title="Importar estudiantes"
         confirmLabel="Cerrar"
         onConfirm={() => setIsImportModalOpen(false)}
       >
-        <div className="space-y-4">
+        <div className="space-y-6 text-center">
           <p className="text-sm text-foreground">
-            1. Seleccione el paralelo al que desea importar los estudiantes.
+            Seleccione el método para importar estudiantes. Puede subir un archivo Excel o escanear una lista física con la cámara. Los estudiantes se registrarán sin paralelo asignado.
           </p>
-          <div className="space-y-1.5">
-            <label className="text-sm font-medium text-foreground">Paralelo de destino</label>
-            <SearchableSelect
-              options={paraleloOptions}
-              value={importParaleloId}
-              onChange={setImportParaleloId}
-              placeholder="Buscar y seleccionar paralelo..."
-            />
-          </div>
           
-          <div className="pt-4 border-t border-border">
-            <p className="text-sm text-foreground mb-3">
-              2. Seleccione el archivo Excel con los estudiantes. (Debe contener columnas Nombres y Apellidos).
-            </p>
-            {importParaleloId ? (
-              <ImportarExcelButton 
-                idParalelo={importParaleloId} 
-                onImportSuccess={() => {
-                  setIsImportModalOpen(false)
-                  setImportParaleloId('')
-                  loadData()
-                }} 
-              />
-            ) : (
-              <p className="text-sm text-muted-foreground italic">
-                Seleccione un paralelo primero para habilitar la importación.
-              </p>
-            )}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 bg-card/50 p-6 rounded-xl border border-border">
+            <ImportarExcelButton 
+              onImportSuccess={() => {
+                setIsImportModalOpen(false)
+                loadData()
+              }} 
+            >
+              <FileSpreadsheet className="h-5 w-5 mr-2" />
+              Importar Excel
+            </ImportarExcelButton>
+            <span className="text-sm text-muted-foreground font-medium">o</span>
+            <EscanearListaButton 
+              onScanSuccess={() => {
+                setIsImportModalOpen(false)
+                loadData()
+              }}
+            >
+              <Camera className="h-5 w-5 mr-2" />
+              Escanear
+            </EscanearListaButton>
           </div>
         </div>
       </Modal>
+
     </div>
   )
 }

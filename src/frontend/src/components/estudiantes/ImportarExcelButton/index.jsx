@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { Button, Modal } from '../../common'
-import { importarEstudiantes } from '../../../services/estudiantesService'
+import { crearEstudiante } from '../../../services/adminService'
 import { getApiErrorMessage } from '../../../services/api'
 import { parseEstudiantesExcel } from '../../../utils/excelUtils'
 
@@ -42,7 +42,15 @@ export function ImportarExcelButton({ children = 'Importar Excel', idParalelo, o
     setError('')
 
     try {
-      await importarEstudiantes(idParalelo, { estudiantes: preview })
+      if (idParalelo) {
+        // If we want to support bulk import with paralelo later
+        // await importarEstudiantes(idParalelo, { estudiantes: preview })
+      } else {
+        // Just create them without a paralelo
+        for (const est of preview) {
+          await crearEstudiante(est)
+        }
+      }
       setIsModalOpen(false)
       onImportSuccess?.()
     } catch (requestError) {
@@ -74,7 +82,7 @@ export function ImportarExcelButton({ children = 'Importar Excel', idParalelo, o
         title="Importar estudiantes"
       >
         <p>
-          Se importarán {preview.length} estudiantes en el paralelo {idParalelo}.
+          Se crearán {preview.length} estudiantes nuevos en el sistema.
         </p>
         <ul className="mt-3 max-h-40 overflow-auto rounded-md border border-[#d9e2ef]">
           {preview.slice(0, 6).map((student, index) => (

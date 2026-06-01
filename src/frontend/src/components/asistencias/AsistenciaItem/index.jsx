@@ -18,7 +18,7 @@ export function AsistenciaItem({ asistencia, onChange }) {
   }
 
   return (
-    <article className="rounded-lg border border-border bg-card p-4 shadow-sm">
+    <article className="rounded-lg rounded-xl border border-border/50 bg-card/60 backdrop-blur-sm shadow-sm transition-all duration-300 p-4 shadow-sm">
       <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0">
           <h3 className="truncate font-medium text-foreground">

@@ -54,7 +54,7 @@ export function DashboardView({ role }) {
       )}
 
       {isLoading && (
-        <div className="flex min-h-[300px] items-center justify-center rounded-lg border border-border bg-card">
+        <div className="flex min-h-[300px] items-center justify-center rounded-lg rounded-xl border border-border/50 bg-card/60 backdrop-blur-sm shadow-sm transition-all duration-300">
           <Spinner size="lg" />
         </div>
       )}
@@ -62,7 +62,7 @@ export function DashboardView({ role }) {
       {!isLoading && dashboardData && (
         <>
           <div className="grid gap-4 md:grid-cols-3">
-            <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+            <div className="rounded-xl border border-border/50 bg-card/80 backdrop-blur-sm p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group">
               <div className="flex items-center gap-4">
                 <div className="rounded-lg bg-primary/10 p-3 text-primary">
                   <Users className="h-6 w-6" />
@@ -74,7 +74,7 @@ export function DashboardView({ role }) {
               </div>
             </div>
             
-            <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+            <div className="rounded-xl border border-border/50 bg-card/80 backdrop-blur-sm p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group">
               <div className="flex items-center gap-4">
                 <div className="rounded-lg bg-emerald-500/10 p-3 text-emerald-500">
                   <BookOpen className="h-6 w-6" />
@@ -86,7 +86,7 @@ export function DashboardView({ role }) {
               </div>
             </div>
 
-            <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+            <div className="rounded-xl border border-border/50 bg-card/80 backdrop-blur-sm p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group">
               <div className="flex items-center gap-4">
                 <div className="rounded-lg bg-blue-500/10 p-3 text-blue-500">
                   <Users className="h-6 w-6" />
@@ -99,7 +99,7 @@ export function DashboardView({ role }) {
             </div>
           </div>
 
-          <div className="rounded-xl border border-border bg-card shadow-sm">
+          <div className="rounded-xl border border-border/50 bg-card/80 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300">
             <div className="border-b border-border p-6 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <AlertTriangle className="h-5 w-5 text-amber-500" />

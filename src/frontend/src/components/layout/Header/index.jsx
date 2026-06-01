@@ -5,14 +5,14 @@ export function Header({ title, user, onLogout }) {
   const teacherName = user ? `${user.nombres} ${user.apellidos}` : 'Docente'
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-card">
+    <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-card/70 backdrop-blur-md shadow-sm">
       <div className="flex h-14 items-center justify-between px-4">
         <div className="flex min-w-0 flex-1 items-center gap-3">
           <div className="flex shrink-0 items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded bg-primary">
+            <div className="flex h-8 w-8 items-center justify-center rounded bg-gradient-to-br from-primary to-primary-dark shadow-md">
               <span className="text-sm font-medium text-primary-foreground">PT</span>
             </div>
-            <span className="hidden font-medium text-primary-dark min-[390px]:inline">
+            <span className="hidden font-medium text-foreground tracking-tight min-[390px]:inline">
               PresenTech
             </span>
           </div>

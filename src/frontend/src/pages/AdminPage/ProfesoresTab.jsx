@@ -141,7 +141,8 @@ export function ProfesoresTab() {
 
       {error && <p className="mb-4 text-sm text-error">{error}</p>}
 
-      <div className="overflow-x-auto rounded-lg border border-border">
+      <div className="overflow-hidden rounded-xl border border-border/50 bg-card/60 backdrop-blur-sm shadow-sm transition-all duration-300">
+          <div className="overflow-x-auto">
         <table className="w-full text-left text-sm text-muted-foreground">
           <thead className="bg-muted/50 text-xs uppercase text-foreground">
             <tr>
@@ -198,7 +199,8 @@ export function ProfesoresTab() {
             )}
           </tbody>
         </table>
-      </div>
+          </div>
+        </div>
 
       <Modal
         isOpen={isModalOpen}

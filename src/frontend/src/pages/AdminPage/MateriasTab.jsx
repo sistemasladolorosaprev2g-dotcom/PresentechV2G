@@ -1,40 +1,34 @@
 import { useEffect, useState } from 'react'
 import { Button, Input, Modal, Spinner } from '../../components/common'
 import {
-  obtenerParalelos,
-  crearParalelo,
-  actualizarParalelo,
-  eliminarParalelo,
+  obtenerMaterias,
+  crearMateria,
+  actualizarMateria,
+  eliminarMateria
 } from '../../services/adminService'
 import { getApiData, getApiErrorMessage } from '../../services/api'
 
-export function ParalelosTab() {
-  const [paralelos, setParalelos] = useState([])
+export function MateriasTab() {
+  const [materias, setMaterias] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
 
-  // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [modalMode, setModalMode] = useState('create')
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [formData, setFormData] = useState({
-    id_paralelo: null,
-    nombre: '',
-    descripcion: '',
-    capacidad_maxima: 30,
-  })
+  const [formData, setFormData] = useState({ id_materia: null, nombre: '', descripcion: '', activo: true })
   const [formError, setFormError] = useState('')
 
   useEffect(() => {
-    loadParalelos()
+    loadMaterias()
   }, [])
 
-  const loadParalelos = async () => {
+  const loadMaterias = async () => {
     setIsLoading(true)
     setError('')
     try {
-      const res = await obtenerParalelos()
-      setParalelos(getApiData(res) || [])
+      const response = await obtenerMaterias()
+      setMaterias(getApiData(response) || [])
     } catch (err) {
       setError(getApiErrorMessage(err))
     } finally {
@@ -44,31 +38,21 @@ export function ParalelosTab() {
 
   const openCreateModal = () => {
     setModalMode('create')
-    setFormData({
-      id_paralelo: null,
-      nombre: '',
-      descripcion: '',
-      capacidad_maxima: 30,
-    })
+    setFormData({ id_materia: null, nombre: '', descripcion: '', activo: true })
     setFormError('')
     setIsModalOpen(true)
   }
 
-  const openEditModal = (paralelo) => {
+  const openEditModal = (materia) => {
     setModalMode('edit')
-    setFormData({
-      id_paralelo: paralelo.id_paralelo,
-      nombre: paralelo.nombre,
-      descripcion: paralelo.descripcion || '',
-      capacidad_maxima: paralelo.capacidad_maxima,
-    })
+    setFormData({ ...materia })
     setFormError('')
     setIsModalOpen(true)
   }
 
   const handleSave = async () => {
-    if (!formData.nombre || !formData.capacidad_maxima) {
-      setFormError('El nombre y la capacidad máxima son obligatorios.')
+    if (!formData.nombre.trim()) {
+      setFormError('El nombre de la materia es requerido.')
       return
     }
 
@@ -77,20 +61,16 @@ export function ParalelosTab() {
 
     try {
       if (modalMode === 'create') {
-        await crearParalelo({
-          nombre: formData.nombre,
-          descripcion: formData.descripcion,
-          capacidad_maxima: Number(formData.capacidad_maxima),
-        })
+        await crearMateria({ nombre: formData.nombre, descripcion: formData.descripcion })
       } else {
-        await actualizarParalelo(formData.id_paralelo, {
-          nombre: formData.nombre,
-          descripcion: formData.descripcion,
-          capacidad_maxima: Number(formData.capacidad_maxima),
+        await actualizarMateria(formData.id_materia, { 
+          nombre: formData.nombre, 
+          descripcion: formData.descripcion, 
+          activo: formData.activo 
         })
       }
       setIsModalOpen(false)
-      loadParalelos()
+      loadMaterias()
     } catch (err) {
       setFormError(getApiErrorMessage(err))
     } finally {
@@ -99,24 +79,22 @@ export function ParalelosTab() {
   }
 
   const handleDelete = async (id) => {
-    if (!confirm('¿Estás seguro de desactivar este paralelo?')) return
+    if (!confirm('¿Estás seguro de desactivar esta materia?')) return
     try {
-      await eliminarParalelo(id)
-      loadParalelos()
+      await eliminarMateria(id)
+      loadMaterias()
     } catch (err) {
       alert(getApiErrorMessage(err))
     }
   }
 
-  if (isLoading) {
-    return <Spinner size="lg" />
-  }
+  if (isLoading) return <Spinner size="lg" />
 
   return (
     <div>
       <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-foreground">Paralelos</h3>
-        <Button onClick={openCreateModal}>+ Nuevo Paralelo</Button>
+        <h3 className="text-lg font-semibold text-foreground">Gestión de Materias</h3>
+        <Button onClick={openCreateModal}>+ Nueva Materia</Button>
       </div>
 
       {error && <p className="mb-4 text-sm text-error">{error}</p>}
@@ -128,36 +106,41 @@ export function ParalelosTab() {
             <tr>
               <th className="px-4 py-3">Nombre</th>
               <th className="px-4 py-3">Descripción</th>
-              <th className="px-4 py-3">Capacidad</th>
+              <th className="px-4 py-3">Estado</th>
               <th className="px-4 py-3 text-right">Acciones</th>
             </tr>
           </thead>
           <tbody>
-            {paralelos.map((p) => (
-              <tr key={p.id_paralelo} className="border-t border-border">
-                <td className="px-4 py-3 font-medium text-foreground">{p.nombre}</td>
-                <td className="px-4 py-3">{p.descripcion || '—'}</td>
-                <td className="px-4 py-3">{p.capacidad_maxima}</td>
+            {materias.map((m) => (
+              <tr key={m.id_materia} className="border-t border-border">
+                <td className="px-4 py-3 font-medium text-foreground">{m.nombre}</td>
+                <td className="px-4 py-3">{m.descripcion || '—'}</td>
+                <td className="px-4 py-3">
+                  <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${m.activo ? 'bg-success/10 text-success' : 'bg-error/10 text-error'}`}>
+                    {m.activo ? 'Activo' : 'Inactivo'}
+                  </span>
+                </td>
                 <td className="px-4 py-3 text-right">
                   <button
-                    onClick={() => openEditModal(p)}
+                    onClick={() => openEditModal(m)}
                     className="mr-3 font-medium text-primary hover:underline"
                   >
                     Editar
                   </button>
                   <button
-                    onClick={() => handleDelete(p.id_paralelo)}
+                    onClick={() => handleDelete(m.id_materia)}
                     className="font-medium text-error hover:underline"
+                    disabled={!m.activo}
                   >
                     Desactivar
                   </button>
                 </td>
               </tr>
             ))}
-            {paralelos.length === 0 && (
+            {materias.length === 0 && (
               <tr>
                 <td colSpan="4" className="px-4 py-8 text-center text-muted-foreground">
-                  No hay paralelos registrados.
+                  No hay materias registradas.
                 </td>
               </tr>
             )}
@@ -170,7 +153,7 @@ export function ParalelosTab() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={handleSave}
-        title={modalMode === 'create' ? 'Nuevo Paralelo' : 'Editar Paralelo'}
+        title={modalMode === 'create' ? 'Nueva Materia' : 'Editar Materia'}
         confirmLabel="Guardar"
         isSubmitting={isSubmitting}
       >
@@ -181,21 +164,14 @@ export function ParalelosTab() {
             </div>
           )}
           <Input
-            label="Nombre *"
+            label="Nombre de la Materia *"
             value={formData.nombre}
             onChange={(val) => setFormData({ ...formData, nombre: val })}
           />
           <Input
             label="Descripción"
-            value={formData.descripcion}
+            value={formData.descripcion || ''}
             onChange={(val) => setFormData({ ...formData, descripcion: val })}
-          />
-          <Input
-            label="Capacidad Máxima *"
-            type="number"
-            min="1"
-            value={formData.capacidad_maxima.toString()}
-            onChange={(val) => setFormData({ ...formData, capacidad_maxima: val })}
           />
         </div>
       </Modal>

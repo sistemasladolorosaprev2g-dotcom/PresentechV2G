@@ -7,6 +7,7 @@ import {
   eliminarClase,
   obtenerProfesores,
   obtenerParalelos,
+  obtenerMaterias,
   agregarHorario,
   eliminarHorario,
 } from '../../services/adminService'
@@ -16,6 +17,7 @@ export function ClasesTab() {
   const [clases, setClases] = useState([])
   const [profesores, setProfesores] = useState([])
   const [paralelos, setParalelos] = useState([])
+  const [materias, setMaterias] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
 
@@ -27,7 +29,7 @@ export function ClasesTab() {
     id_clase: null,
     id_profesor: '',
     id_paralelo: '',
-    materia: '',
+    id_materia: '',
     observaciones: '',
   })
   const [formError, setFormError] = useState('')
@@ -49,14 +51,16 @@ export function ClasesTab() {
     setIsLoading(true)
     setError('')
     try {
-      const [resClases, resProf, resParalelos] = await Promise.all([
+      const [resClases, resProf, resParalelos, resMaterias] = await Promise.all([
         obtenerClases(),
         obtenerProfesores(),
         obtenerParalelos(),
+        obtenerMaterias(),
       ])
       setClases(getApiData(resClases) || [])
       setProfesores((getApiData(resProf) || []).filter(p => p.activo))
       setParalelos((getApiData(resParalelos) || []).filter(p => p.activo))
+      setMaterias((getApiData(resMaterias) || []).filter(m => m.activo))
     } catch (err) {
       setError(getApiErrorMessage(err))
     } finally {
@@ -71,7 +75,7 @@ export function ClasesTab() {
       id_clase: null,
       id_profesor: profesores[0]?.id_profesor?.toString() || '',
       id_paralelo: paralelos[0]?.id_paralelo?.toString() || '',
-      materia: '',
+      id_materia: materias[0]?.id_materia?.toString() || '',
       observaciones: '',
     })
     setFormError('')
@@ -84,7 +88,7 @@ export function ClasesTab() {
       id_clase: clase.id_clase,
       id_profesor: clase.id_profesor.toString(),
       id_paralelo: clase.id_paralelo.toString(),
-      materia: clase.materia,
+      id_materia: clase.id_materia?.toString() || '',
       observaciones: clase.observaciones || '',
     })
     setFormError('')
@@ -92,7 +96,7 @@ export function ClasesTab() {
   }
 
   const handleSaveClase = async () => {
-    if (!formData.id_profesor || !formData.id_paralelo || !formData.materia) {
+    if (!formData.id_profesor || !formData.id_paralelo || !formData.id_materia) {
       setFormError('Profesor, Paralelo y Materia son obligatorios.')
       return
     }
@@ -104,7 +108,7 @@ export function ClasesTab() {
       const payload = {
         id_profesor: Number(formData.id_profesor),
         id_paralelo: Number(formData.id_paralelo),
-        materia: formData.materia,
+        id_materia: Number(formData.id_materia),
         observaciones: formData.observaciones,
       }
 
@@ -184,7 +188,8 @@ export function ClasesTab() {
 
       {error && <p className="mb-4 text-sm text-error">{error}</p>}
 
-      <div className="overflow-x-auto rounded-lg border border-border">
+      <div className="overflow-hidden rounded-xl border border-border/50 bg-card/60 backdrop-blur-sm shadow-sm transition-all duration-300">
+          <div className="overflow-x-auto">
         <table className="w-full text-left text-sm text-muted-foreground">
           <thead className="bg-muted/50 text-xs uppercase text-foreground">
             <tr>
@@ -198,7 +203,7 @@ export function ClasesTab() {
           <tbody>
             {clases.map((clase) => (
               <tr key={clase.id_clase} className="border-t border-border">
-                <td className="px-4 py-3 font-medium text-foreground">{clase.materia}</td>
+                <td className="px-4 py-3 font-medium text-foreground">{clase.nombre_materia}</td>
                 <td className="px-4 py-3">{clase.nombre_profesor}</td>
                 <td className="px-4 py-3">{clase.nombre_paralelo}</td>
                 <td className="px-4 py-3 text-xs">
@@ -245,7 +250,8 @@ export function ClasesTab() {
             )}
           </tbody>
         </table>
-      </div>
+          </div>
+        </div>
 
       {/* Modal Clase */}
       <Modal
@@ -262,10 +268,12 @@ export function ClasesTab() {
               {formError}
             </div>
           )}
-          <Input
+          <SearchableSelect
             label="Materia *"
-            value={formData.materia}
-            onChange={(val) => setFormData({ ...formData, materia: val })}
+            value={formData.id_materia}
+            onChange={(val) => setFormData({ ...formData, id_materia: val })}
+            placeholder="Seleccione una materia"
+            options={materias.map(m => ({ value: m.id_materia.toString(), label: m.nombre }))}
           />
           <SearchableSelect
             label="Profesor *"
@@ -294,7 +302,7 @@ export function ClasesTab() {
         isOpen={isHorarioModalOpen}
         onClose={() => setIsHorarioModalOpen(false)}
         onConfirm={handleAddHorario}
-        title={`Horarios: ${claseSeleccionada?.materia}`}
+        title={`Horarios: ${claseSeleccionada?.nombre_materia || ''}`}
         confirmLabel="Añadir Franja"
         isSubmitting={isSubmitting}
       >

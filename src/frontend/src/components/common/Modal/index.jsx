@@ -1,5 +1,5 @@
+import { createPortal } from 'react-dom'
 import { Button } from '../Button'
-
 export function Modal({
   cancelLabel = 'Cancelar',
   children,
@@ -13,20 +13,20 @@ export function Modal({
 }) {
   if (!isOpen) return null
 
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-[#0f172a]/40 px-4 pb-20 pt-4 sm:items-center sm:py-4"
+      className="fixed inset-0 z-50 flex items-end justify-center bg-foreground/30 backdrop-blur-sm px-4 pb-20 pt-4 sm:items-center sm:py-4 animate-fade-in"
       role="presentation"
       onMouseDown={onClose}
     >
       <section
         aria-modal="true"
-        className="w-full max-w-md max-h-[calc(100svh-6rem)] overflow-y-auto rounded-lg border border-[#d9e2ef] bg-white p-5 text-left shadow-xl sm:max-h-[calc(100svh-2rem)]"
+        className="w-full max-w-md max-h-[calc(100svh-6rem)] overflow-y-auto rounded-xl border border-border/50 bg-card/90 backdrop-blur-md p-6 text-left shadow-2xl sm:max-h-[calc(100svh-2rem)] animate-slide-up"
         role="dialog"
         onMouseDown={(event) => event.stopPropagation()}
       >
-        <h2 className="text-lg font-semibold text-[#172033]">{title}</h2>
-        <div className="mt-3 text-sm leading-6 text-[#667085]">{children}</div>
+        <h2 className="text-xl font-semibold text-foreground tracking-tight">{title}</h2>
+        <div className="mt-3 text-base leading-6 text-muted-foreground">{children}</div>
         <div className="mt-5 grid gap-3 sm:grid-cols-2">
           <Button variant="secondary" onClick={onClose} disabled={isSubmitting}>
             {cancelLabel}
@@ -36,6 +36,7 @@ export function Modal({
           </Button>
         </div>
       </section>
-    </div>
+    </div>,
+    document.body
   )
 }

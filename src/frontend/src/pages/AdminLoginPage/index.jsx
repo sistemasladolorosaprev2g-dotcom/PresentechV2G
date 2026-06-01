@@ -36,42 +36,50 @@ export function AdminLoginPage() {
   }
 
   return (
-    <main className="flex min-h-svh items-center justify-center bg-background px-4 py-8">
-      <section className="mx-auto flex min-h-[calc(100svh-4rem)] w-full max-w-md flex-col justify-center">
+    <main className="flex min-h-svh items-center justify-center bg-gradient-to-br from-secondary via-background to-primary/10 relative overflow-hidden">
+      {/* Animated background blobs */}
+      <div className="absolute -top-32 -left-32 w-96 h-96 bg-primary/20 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-float" />
+      <div className="absolute top-40 -right-32 w-96 h-96 bg-secondary-foreground/10 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-float" style={{ animationDelay: '2s' }} />
+      <div className="absolute -bottom-40 left-20 w-96 h-96 bg-primary/10 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-float" style={{ animationDelay: '4s' }} />
+
+      {/* Overlay a pantalla completa */}
+      <div className="absolute inset-0 bg-card/30 backdrop-blur-xl z-0" />
+
+      <section className="relative z-10 w-full max-w-md px-4 py-8 animate-fade-in animate-slide-up flex flex-col items-center">
         <div className="mb-8 flex flex-col items-center">
-          <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-lg bg-primary">
-            <span className="text-2xl font-semibold text-primary-foreground">PT</span>
+          <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-primary-dark shadow-xl">
+            <span className="text-3xl font-bold text-primary-foreground tracking-tight">PT</span>
           </div>
-          <h1 className="text-2xl font-semibold text-primary-dark">PresenTech</h1>
-          <p className="mt-2 text-center text-sm text-muted-foreground">
+          <h1 className="text-3xl font-bold text-foreground tracking-tight">PresenTech</h1>
+          <p className="mt-2 text-center text-base text-muted-foreground">
             Panel de Administración - Vicerectorado
           </p>
         </div>
 
         <form
-          className="rounded-lg border border-border bg-card p-6 shadow-sm"
+          className="w-full rounded-3xl border border-border/50 bg-card/80 p-8 shadow-2xl relative z-20"
           onSubmit={handleSubmit}
         >
-          <div className="mb-6">
-            <h2 className="text-lg font-medium text-foreground">Acceso administrativo</h2>
-            <p className="mt-1 text-sm text-muted-foreground">
+          <div className="mb-8 text-center">
+            <h2 className="text-xl font-semibold text-foreground">Acceso Administrativo</h2>
+            <p className="mt-2 text-sm text-muted-foreground">
               Ingrese sus credenciales de vicerectorado
             </p>
           </div>
 
-          <Input
-            label="Correo institucional"
-            type="email"
-            value={credentials.correo_institucional}
-            onChange={(value) =>
-              setCredentials((current) => ({
-                ...current,
-                correo_institucional: value,
-              }))
-            }
-          />
+          <div className="space-y-5">
+            <Input
+              label="Correo institucional"
+              type="email"
+              value={credentials.correo_institucional}
+              onChange={(value) =>
+                setCredentials((current) => ({
+                  ...current,
+                  correo_institucional: value,
+                }))
+              }
+            />
 
-          <div className="mt-4">
             <Input
               label="Contraseña"
               type="password"
@@ -86,17 +94,19 @@ export function AdminLoginPage() {
           </div>
 
           {error ? (
-            <p className="mt-4 rounded-md border border-error bg-error-bg px-3 py-2 text-sm text-error">
+            <div className="mt-6 rounded-lg border border-error/20 bg-error-bg/80 backdrop-blur-sm px-4 py-3 text-sm text-error flex items-center justify-center">
               {error}
-            </p>
+            </div>
           ) : null}
 
-          <Button className="mt-5 w-full" type="submit" isLoading={isSubmitting}>
-            {isSubmitting ? 'Ingresando...' : 'Ingresar'}
-          </Button>
+          <div className="mt-8 flex justify-center w-full">
+            <Button className="w-3/4 text-base py-2.5 rounded-xl" type="submit" isLoading={isSubmitting}>
+              {isSubmitting ? 'Ingresando...' : 'Ingresar'}
+            </Button>
+          </div>
         </form>
-        <p className="mt-6 text-center text-xs text-muted-foreground">
-          Fe y Alegría - Sistema educativo
+        <p className="mt-10 text-center text-sm text-muted-foreground font-medium z-30">
+          Fe y Alegría &middot; Innovación Educativa
         </p>
       </section>
     </main>

@@ -34,7 +34,7 @@ export function SearchableSelect({
       {label && <label className="text-sm font-medium text-foreground">{label}</label>}
       <div className="relative">
         <div 
-          className={`w-full flex items-center justify-between rounded-md border bg-background px-4 py-3 text-base shadow-sm cursor-pointer ${
+          className={`w-full flex items-center justify-between rounded-md border bg-background px-4 py-3 min-h-12 text-base shadow-sm cursor-pointer ${
             isOpen ? "border-primary ring-1 ring-primary" : "border-input"
           }`}
           onClick={() => setIsOpen(!isOpen)}

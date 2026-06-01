@@ -1,33 +1,43 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f8fafc;
-  --foreground: #172033;
-  --card: #ffffff;
-  --card-foreground: #172033;
-  --primary: #2563eb;
+  --background: #fcfcfd;
+  --foreground: #171717;
+  
+  /* Glassmorphism Cards */
+  --card: rgba(255, 255, 255, 0.75);
+  --card-foreground: #171717;
+  
+  /* Concha Vino Palette (Burgundy / Wine) */
+  --primary: #722F37;
   --primary-foreground: #ffffff;
-  --primary-dark: #1e3a5f;
-  --secondary: #f4f7fb;
-  --secondary-foreground: #1e3a5f;
-  --muted: #f4f7fb;
-  --muted-foreground: #667085;
-  --border: #d9e2ef;
-  --input-border: #cbd5e1;
-  --destructive: #b42318;
+  --primary-dark: #4A1C24;
+  
+  --secondary: #f4f0f2;
+  --secondary-foreground: #4a1523;
+  
+  --muted: #f5f5f5;
+  --muted-foreground: #737373;
+  
+  --border: #e5e5e5;
+  --input-border: #d4d4d4;
+  
+  --destructive: #dc2626;
   --destructive-foreground: #ffffff;
-  --success: #166534;
+  
+  --success: #15803d;
   --success-foreground: #ffffff;
   --success-bg: #f0fdf4;
-  --warning: #9a3412;
+  
+  --warning: #b45309;
   --warning-foreground: #ffffff;
-  --warning-bg: #fff7ed;
-  --error: #991b1b;
+  --warning-bg: #fffbeb;
+  
+  --error: #b91c1c;
   --error-bg: #fef2f2;
-  font-family:
-    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    sans-serif;
-  color: #172033;
+  
+  font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--foreground);
   background: var(--background);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -59,6 +69,27 @@
   --color-warning-bg: var(--warning-bg);
   --color-error: var(--error);
   --color-error-bg: var(--error-bg);
+
+  /* Custom animations */
+  --animate-fade-in: fade-in 0.4s ease-out forwards;
+  --animate-slide-up: slide-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-float: float 4s ease-in-out infinite;
+}
+
+@keyframes fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes slide-up {
+  0% { opacity: 0; transform: translateY(15px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+  100% { transform: translateY(0px); }
 }
 
 * {

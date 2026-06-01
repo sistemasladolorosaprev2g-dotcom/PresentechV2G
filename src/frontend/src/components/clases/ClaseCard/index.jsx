@@ -7,7 +7,7 @@ export function ClaseCard({ clase, onImportSuccess }) {
   const proximaClase = getProximaClase(clase.horarios)
 
   return (
-    <article className="rounded-lg border border-border bg-card p-4 shadow-sm transition-shadow hover:shadow-md">
+    <article className="rounded-lg rounded-xl border border-border/50 bg-card/60 backdrop-blur-sm shadow-sm transition-all duration-300 p-4 shadow-sm transition-shadow hover:shadow-md">
       <div className="mb-3 min-w-0">
         <h2 className="truncate font-medium text-foreground">{clase.materia}</h2>
         <p className="mt-1 truncate text-sm text-muted-foreground">

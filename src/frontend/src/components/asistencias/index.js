@@ -1,2 +1,2 @@
-export { AsistenciaForm } from './AsistenciaForm'
-export { AsistenciaItem } from './AsistenciaItem'
+export * from './AsistenciaForm'
+export * from './AsistenciaItem'

@@ -79,15 +79,15 @@ export function ClasesPage() {
         </div>
 
         {/* Tabs Navegación */}
-        <div className="mb-6 flex space-x-1 rounded-lg bg-card p-1 shadow-sm border border-border">
+        <div className="mb-6 flex flex-wrap gap-2 rounded-xl bg-card/60 backdrop-blur-sm p-1.5 shadow-sm border border-border/50">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 rounded-md py-2 text-sm font-medium transition-colors ${
+              className={`flex-1 rounded-lg py-2.5 px-4 text-sm font-semibold transition-all duration-200 ${
                 activeTab === tab.id
-                  ? 'bg-primary text-primary-foreground shadow'
-                  : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                  ? 'bg-gradient-to-r from-primary to-primary-dark text-primary-foreground shadow-md'
+                  : 'text-muted-foreground hover:bg-muted/80 hover:text-foreground'
               }`}
             >
               {tab.label}
@@ -96,7 +96,7 @@ export function ClasesPage() {
         </div>
 
         {/* Contenido del Tab */}
-        <div className="rounded-lg border border-border bg-card p-4 md:p-6 shadow-sm">
+        <div className="rounded-2xl border border-border/50 bg-card/80 backdrop-blur-md p-4 md:p-6 shadow-xl animate-fade-in">
           {activeTab === 'dashboard' && <DashboardView role="profesor" />}
           
           {activeTab === 'clases' && (
@@ -108,7 +108,7 @@ export function ClasesPage() {
               ) : null}
 
               {isLoading ? (
-                <div className="flex min-h-64 items-center justify-center rounded-lg border border-border bg-card">
+                <div className="flex min-h-64 items-center justify-center">
                   <Spinner size="lg" />
                 </div>
               ) : null}
@@ -118,7 +118,7 @@ export function ClasesPage() {
               ) : null}
 
               {!isLoading && !clases.length && !error ? (
-                <div className="rounded-lg border border-border bg-card p-5 text-center shadow-sm">
+                <div className="rounded-xl border border-border/50 bg-card/60 backdrop-blur-sm p-5 text-center shadow-sm">
                   <h2 className="text-lg font-medium text-foreground">
                     No hay clases asignadas
                   </h2>
