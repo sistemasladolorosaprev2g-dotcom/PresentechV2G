@@ -16,6 +16,7 @@ namespace Presentech.DataManagement.Interfaces
         // =========================
         Task<EstudianteDataModel> CrearAsync(EstudianteDataModel model, CancellationToken cancellationToken = default);
         Task MatricularAsync(int id_estudiante, int id_paralelo, CancellationToken cancellationToken = default);
+        Task DesmatricularAsync(int id_estudiante, int id_paralelo, CancellationToken cancellationToken = default);
 
         // =========================
         // IMPORTACIÓN EXCEL (reemplaza matrícula completa del paralelo)

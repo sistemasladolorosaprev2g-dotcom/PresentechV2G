@@ -23,5 +23,6 @@ namespace Presentech.DataAccess.Repositories.Interfaces
         // =========================
         Task DesactivarMatriculasPorParaleloAsync(int id_paralelo, CancellationToken cancellationToken = default);
         Task MatricularRangoAsync(IEnumerable<ParaleloEstudianteEntity> matriculas, CancellationToken cancellationToken = default);
+        Task DesmatricularAsync(int id_estudiante, int id_paralelo, CancellationToken cancellationToken = default);
     }
 }

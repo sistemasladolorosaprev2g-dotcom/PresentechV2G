@@ -310,6 +310,7 @@ namespace Presentech.Business.Services
                 nombres       = e.nombres,
                 apellidos     = e.apellidos,
                 activo        = e.activo,
+                id_paralelos  = e.IdParalelos,
             }).ToList();
         }
 
@@ -348,6 +349,16 @@ namespace Presentech.Business.Services
                 apellidos     = estudiante.apellidos,
                 activo        = estudiante.activo,
             };
+        }
+
+        public async Task DesasignarParaleloAsync(int id_estudiante, int id_paralelo, CancellationToken cancellationToken = default)
+        {
+            _ = await _estudianteDataService.ObtenerPorIdAsync(id_estudiante, cancellationToken)
+                ?? throw new NotFoundException("Estudiante", id_estudiante);
+            _ = await _paraleloDataService.ObtenerPorIdAsync(id_paralelo, cancellationToken)
+                ?? throw new NotFoundException("Paralelo", id_paralelo);
+
+            await _estudianteDataService.DesmatricularAsync(id_estudiante, id_paralelo, cancellationToken);
         }
 
         public async Task ImportarEstudiantesExcelAsync(int id_paralelo, Presentech.Business.DTOs.Estudiante.ImportarEstudiantesRequest request, CancellationToken cancellationToken = default)

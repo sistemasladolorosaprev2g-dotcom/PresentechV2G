@@ -1,3 +1,4 @@
+using System.Linq;
 using Presentech.DataAccess.Entities;
 using Presentech.DataManagement.Models;
 
@@ -17,6 +18,7 @@ namespace Presentech.DataManagement.Mappers
                 apellidos     = entity.apellidos,
                 activo        = entity.activo,
                 created_at    = entity.created_at,
+                IdParalelos   = entity.ParaleloEstudiantes?.Where(p => p.activo).Select(p => p.id_paralelo).ToList() ?? new List<int>()
             };
         }
 

@@ -18,5 +18,6 @@ namespace Presentech.DataManagement.Models
         // =========================
         public bool activo { get; set; }
         public DateTime created_at { get; set; }
+        public List<int> IdParalelos { get; set; } = new();
     }
 }

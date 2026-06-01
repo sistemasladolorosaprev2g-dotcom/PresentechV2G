@@ -59,6 +59,12 @@ namespace Presentech.DataManagement.Services
             await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
 
+        public async Task DesmatricularAsync(int id_estudiante, int id_paralelo, CancellationToken cancellationToken = default)
+        {
+            await _unitOfWork.EstudianteRepository.DesmatricularAsync(id_estudiante, id_paralelo, cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+        }
+
         // =========================
         // IMPORTACIÓN EXCEL
         // Desactiva la matrícula actual del paralelo y registra los nuevos estudiantes.

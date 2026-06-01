@@ -36,7 +36,9 @@ namespace Presentech.DataAccess.Repositories
 
         public IQueryable<EstudianteEntity> GetAll()
         {
-            return _context.Estudiantes.AsNoTracking();
+            return _context.Estudiantes
+                .Include(e => e.ParaleloEstudiantes.Where(pe => pe.activo))
+                .AsNoTracking();
         }
 
         // =========================
@@ -73,6 +75,17 @@ namespace Presentech.DataAccess.Repositories
         public async Task MatricularRangoAsync(IEnumerable<ParaleloEstudianteEntity> matriculas, CancellationToken cancellationToken = default)
         {
             await _context.ParaleloEstudiantes.AddRangeAsync(matriculas, cancellationToken);
+        }
+
+        public async Task DesmatricularAsync(int id_estudiante, int id_paralelo, CancellationToken cancellationToken = default)
+        {
+            var matricula = await _context.ParaleloEstudiantes
+                .FirstOrDefaultAsync(pe => pe.id_estudiante == id_estudiante && pe.id_paralelo == id_paralelo && pe.activo, cancellationToken);
+            
+            if (matricula != null)
+            {
+                matricula.activo = false;
+            }
         }
     }
 }

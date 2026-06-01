@@ -214,6 +214,15 @@ public class AdminController : AdminBaseController
         return Ok(ApiResponse<EstudianteAdminResponse>.Ok(result, "Estudiante asignado al paralelo exitosamente."));
     }
 
+    [HttpDelete("estudiantes/{id:int}/paralelos/{idParalelo:int}")]
+    [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DesasignarParalelo(int id, int idParalelo, CancellationToken cancellationToken)
+    {
+        await _adminService.DesasignarParaleloAsync(id, idParalelo, cancellationToken);
+        return Ok(ApiResponse<string>.Ok("OK", "Estudiante desasignado del paralelo exitosamente."));
+    }
+
     // ══════════════════════════════════════════════════════════════════════════
     // MATERIAS
     // ══════════════════════════════════════════════════════════════════════════

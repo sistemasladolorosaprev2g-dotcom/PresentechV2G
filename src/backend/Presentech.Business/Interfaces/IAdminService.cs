@@ -47,6 +47,7 @@ namespace Presentech.Business.Interfaces
         Task<IReadOnlyList<EstudianteAdminResponse>> ObtenerEstudiantesAsync(CancellationToken cancellationToken = default);
         Task<EstudianteAdminResponse> CrearEstudianteAsync(CrearEstudianteRequest request, CancellationToken cancellationToken = default);
         Task<EstudianteAdminResponse> AsignarParaleloAsync(int id_estudiante, int id_paralelo, CancellationToken cancellationToken = default);
+        Task DesasignarParaleloAsync(int id_estudiante, int id_paralelo, CancellationToken cancellationToken = default);
         Task ImportarEstudiantesExcelAsync(int id_paralelo, Presentech.Business.DTOs.Estudiante.ImportarEstudiantesRequest request, CancellationToken cancellationToken = default);
 
         // =========================
