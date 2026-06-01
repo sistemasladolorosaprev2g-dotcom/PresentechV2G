@@ -27,6 +27,7 @@ export function DashboardView({ role }) {
   }, [role])
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadData()
   }, [loadData])
 

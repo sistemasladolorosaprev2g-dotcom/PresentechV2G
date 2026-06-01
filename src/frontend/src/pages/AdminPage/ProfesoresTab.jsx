@@ -32,7 +32,7 @@ export function ProfesoresTab() {
     loadProfesores()
   }, [])
 
-  const loadProfesores = async () => {
+  async function loadProfesores() {
     setIsLoading(true)
     setError('')
     try {

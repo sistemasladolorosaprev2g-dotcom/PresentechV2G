@@ -47,7 +47,7 @@ export function ClasesTab() {
     loadAllData()
   }, [])
 
-  const loadAllData = async () => {
+  async function loadAllData() {
     setIsLoading(true)
     setError('')
     try {

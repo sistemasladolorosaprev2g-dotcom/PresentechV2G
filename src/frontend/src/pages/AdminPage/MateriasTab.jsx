@@ -23,7 +23,7 @@ export function MateriasTab() {
     loadMaterias()
   }, [])
 
-  const loadMaterias = async () => {
+  async function loadMaterias() {
     setIsLoading(true)
     setError('')
     try {

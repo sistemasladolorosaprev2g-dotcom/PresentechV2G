@@ -1,8 +1,8 @@
 import { useCallback, useRef, useState } from 'react'
 import Webcam from 'react-webcam'
-import { Camera, FileText, CheckCircle, Upload, X } from 'lucide-react'
+import { Camera, FileText, CheckCircle, X } from 'lucide-react'
 import { Button, Modal } from '../common'
-import { crearEstudiante, asignarParaleloEstudiante } from '../../services/adminService'
+import { crearEstudiante } from '../../services/adminService'
 import { getApiErrorMessage } from '../../services/api'
 
 const videoConstraints = {

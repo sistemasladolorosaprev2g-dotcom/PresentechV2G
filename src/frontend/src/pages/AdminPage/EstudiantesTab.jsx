@@ -45,6 +45,7 @@ export function EstudiantesTab() {
   }, [])
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadData()
   }, [loadData])
 
@@ -219,13 +220,13 @@ export function EstudiantesTab() {
             label="Nombres"
             placeholder="Nombres del estudiante"
             value={nuevoEstudiante.nombres}
-            onChange={(e) => setNuevoEstudiante({ ...nuevoEstudiante, nombres: e.target.value })}
+            onChange={(val) => setNuevoEstudiante({ ...nuevoEstudiante, nombres: val })}
           />
           <Input
             label="Apellidos"
             placeholder="Apellidos del estudiante"
             value={nuevoEstudiante.apellidos}
-            onChange={(e) => setNuevoEstudiante({ ...nuevoEstudiante, apellidos: e.target.value })}
+            onChange={(val) => setNuevoEstudiante({ ...nuevoEstudiante, apellidos: val })}
           />
         </div>
       </Modal>

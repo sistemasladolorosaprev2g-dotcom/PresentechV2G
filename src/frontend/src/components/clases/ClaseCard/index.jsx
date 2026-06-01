@@ -1,9 +1,9 @@
-import { Calendar, Clock, Upload } from 'lucide-react'
+import { Calendar, Clock } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Button } from '../../common'
 import { formatHorario, formatTime, getProximaClase } from '../../../utils/claseUtils'
 
-export function ClaseCard({ clase, onImportSuccess }) {
+export function ClaseCard({ clase }) {
   const proximaClase = getProximaClase(clase.horarios)
 
   return (

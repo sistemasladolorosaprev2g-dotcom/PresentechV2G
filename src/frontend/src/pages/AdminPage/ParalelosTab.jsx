@@ -29,7 +29,7 @@ export function ParalelosTab() {
     loadParalelos()
   }, [])
 
-  const loadParalelos = async () => {
+  async function loadParalelos() {
     setIsLoading(true)
     setError('')
     try {
