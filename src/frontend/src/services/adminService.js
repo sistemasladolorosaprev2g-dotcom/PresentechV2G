@@ -84,3 +84,19 @@ export async function eliminarHorario(idClase, idHorario) {
   const response = await api.delete(`/admin/clases/${idClase}/horarios/${idHorario}`)
   return response.data
 }
+
+// -- Estudiantes ----------------------------------------------------------------
+export async function obtenerEstudiantes() {
+  const response = await api.get('/admin/estudiantes')
+  return response.data
+}
+
+export async function crearEstudiante(data) {
+  const response = await api.post('/admin/estudiantes', data)
+  return response.data
+}
+
+export async function asignarParaleloEstudiante(idEstudiante, idParalelo) {
+  const response = await api.post(`/admin/estudiantes/${idEstudiante}/paralelos/${idParalelo}`)
+  return response.data
+}

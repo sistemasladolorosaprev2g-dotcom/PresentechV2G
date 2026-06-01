@@ -3,14 +3,18 @@ import { AppLayout } from '../../components/layout'
 import { ProfesoresTab } from './ProfesoresTab'
 import { ParalelosTab } from './ParalelosTab'
 import { ClasesTab } from './ClasesTab'
+import { EstudiantesTab } from './EstudiantesTab'
+import { DashboardView } from '../../components/dashboard'
 
 export function AdminPage() {
   const [activeTab, setActiveTab] = useState('profesores')
 
   const tabs = [
+    { id: 'dashboard', label: 'Dashboard' },
     { id: 'profesores', label: 'Profesores' },
     { id: 'paralelos', label: 'Paralelos' },
     { id: 'clases', label: 'Clases y Horarios' },
+    { id: 'estudiantes', label: 'Estudiantes' },
   ]
 
   return (
@@ -42,9 +46,11 @@ export function AdminPage() {
 
         {/* Contenido del Tab */}
         <div className="rounded-lg border border-border bg-card p-4 md:p-6 shadow-sm">
+          {activeTab === 'dashboard' && <DashboardView role="admin" />}
           {activeTab === 'profesores' && <ProfesoresTab />}
           {activeTab === 'paralelos' && <ParalelosTab />}
           {activeTab === 'clases' && <ClasesTab />}
+          {activeTab === 'estudiantes' && <EstudiantesTab />}
         </div>
       </section>
     </AppLayout>

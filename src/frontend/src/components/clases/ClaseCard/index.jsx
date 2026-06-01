@@ -2,7 +2,6 @@ import { Calendar, Clock, Upload } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Button } from '../../common'
 import { formatHorario, formatTime, getProximaClase } from '../../../utils/claseUtils'
-import { ImportarExcelButton } from '../../estudiantes/ImportarExcelButton'
 
 export function ClaseCard({ clase, onImportSuccess }) {
   const proximaClase = getProximaClase(clase.horarios)
@@ -50,10 +49,6 @@ export function ClaseCard({ clase, onImportSuccess }) {
             Ver calendario
           </Link>
         </Button>
-        <ImportarExcelButton idParalelo={clase.id_paralelo} onImportSuccess={onImportSuccess}>
-          <Upload aria-hidden="true" className="h-4 w-4" />
-          Importar Excel
-        </ImportarExcelButton>
       </div>
     </article>
   )

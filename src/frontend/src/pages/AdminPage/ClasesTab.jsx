@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Button, Input, Modal, Spinner } from '../../components/common'
+import { Button, Input, Modal, Spinner, SearchableSelect } from '../../components/common'
 import {
   obtenerClases,
   crearClase,
@@ -267,32 +267,20 @@ export function ClasesTab() {
             value={formData.materia}
             onChange={(val) => setFormData({ ...formData, materia: val })}
           />
-          <div className="space-y-1">
-            <label className="text-sm font-medium text-foreground">Profesor *</label>
-            <select
-              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-              value={formData.id_profesor}
-              onChange={(e) => setFormData({ ...formData, id_profesor: e.target.value })}
-            >
-              <option value="" disabled>Seleccione un profesor</option>
-              {profesores.map(p => (
-                <option key={p.id_profesor} value={p.id_profesor}>{p.nombres} {p.apellidos}</option>
-              ))}
-            </select>
-          </div>
-          <div className="space-y-1">
-            <label className="text-sm font-medium text-foreground">Paralelo *</label>
-            <select
-              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-              value={formData.id_paralelo}
-              onChange={(e) => setFormData({ ...formData, id_paralelo: e.target.value })}
-            >
-              <option value="" disabled>Seleccione un paralelo</option>
-              {paralelos.map(p => (
-                <option key={p.id_paralelo} value={p.id_paralelo}>{p.nombre}</option>
-              ))}
-            </select>
-          </div>
+          <SearchableSelect
+            label="Profesor *"
+            value={formData.id_profesor}
+            onChange={(val) => setFormData({ ...formData, id_profesor: val })}
+            placeholder="Seleccione un profesor"
+            options={profesores.map(p => ({ value: p.id_profesor.toString(), label: `${p.nombres} ${p.apellidos}` }))}
+          />
+          <SearchableSelect
+            label="Paralelo *"
+            value={formData.id_paralelo}
+            onChange={(val) => setFormData({ ...formData, id_paralelo: val })}
+            placeholder="Seleccione un paralelo"
+            options={paralelos.map(p => ({ value: p.id_paralelo.toString(), label: p.nombre }))}
+          />
           <Input
             label="Observaciones"
             value={formData.observaciones}
@@ -339,22 +327,21 @@ export function ClasesTab() {
 
           <div className="border-t pt-4 space-y-3">
             <p className="text-sm font-semibold">Añadir nueva franja</p>
-            <div className="space-y-1">
-              <label className="text-sm font-medium text-foreground">Día de la semana</label>
-              <select
-                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                value={horarioData.id_dia}
-                onChange={(e) => setHorarioData({ ...horarioData, id_dia: e.target.value })}
-              >
-                <option value="1">Lunes</option>
-                <option value="2">Martes</option>
-                <option value="3">Miércoles</option>
-                <option value="4">Jueves</option>
-                <option value="5">Viernes</option>
-                <option value="6">Sábado</option>
-                <option value="7">Domingo</option>
-              </select>
-            </div>
+            <SearchableSelect
+              label="Día de la semana"
+              value={horarioData.id_dia}
+              onChange={(val) => setHorarioData({ ...horarioData, id_dia: val })}
+              placeholder="Seleccione un día"
+              options={[
+                { value: "1", label: "Lunes" },
+                { value: "2", label: "Martes" },
+                { value: "3", label: "Miércoles" },
+                { value: "4", label: "Jueves" },
+                { value: "5", label: "Viernes" },
+                { value: "6", label: "Sábado" },
+                { value: "7", label: "Domingo" },
+              ]}
+            />
             <div className="grid grid-cols-2 gap-4">
               <Input
                 label="Hora Inicio"
