@@ -19,6 +19,7 @@ namespace Presentech.Business.Services
         private readonly IParaleloDataService      _paraleloDataService;
         private readonly IClaseDataService         _claseDataService;
         private readonly IClaseHorarioDataService  _claseHorarioDataService;
+        private readonly IMateriaDataService       _materiaDataService;
         private readonly IEstudianteDataService    _estudianteDataService;
         private readonly IEstudianteService        _estudianteService;
         private readonly JwtSettings               _jwtSettings;
@@ -29,6 +30,7 @@ namespace Presentech.Business.Services
             IParaleloDataService      paraleloDataService,
             IClaseDataService         claseDataService,
             IClaseHorarioDataService  claseHorarioDataService,
+            IMateriaDataService       materiaDataService,
             IEstudianteDataService    estudianteDataService,
             IEstudianteService        estudianteService,
             JwtSettings               jwtSettings)
@@ -38,6 +40,7 @@ namespace Presentech.Business.Services
             _paraleloDataService      = paraleloDataService;
             _claseDataService         = claseDataService;
             _claseHorarioDataService  = claseHorarioDataService;
+            _materiaDataService       = materiaDataService;
             _estudianteDataService    = estudianteDataService;
             _estudianteService        = estudianteService;
             _jwtSettings              = jwtSettings;
@@ -223,7 +226,7 @@ namespace Presentech.Business.Services
             {
                 id_profesor = request.id_profesor,
                 id_paralelo = request.id_paralelo,
-                materia     = request.materia,
+                id_materia  = request.id_materia,
                 observaciones = request.observaciones,
             };
             var created = await _claseDataService.CrearAsync(model, cancellationToken);
@@ -241,7 +244,7 @@ namespace Presentech.Business.Services
                 id_clase      = id_clase,
                 id_profesor   = request.id_profesor,
                 id_paralelo   = request.id_paralelo,
-                materia       = request.materia,
+                id_materia    = request.id_materia,
                 observaciones = request.observaciones,
             };
             var updated = await _claseDataService.ActualizarAsync(model, cancellationToken);
@@ -350,6 +353,45 @@ namespace Presentech.Business.Services
         public async Task ImportarEstudiantesExcelAsync(int id_paralelo, Presentech.Business.DTOs.Estudiante.ImportarEstudiantesRequest request, CancellationToken cancellationToken = default)
         {
             await _estudianteService.ImportarAsync(id_paralelo, request, cancellationToken);
+        }
+
+        // =========================
+        // MATERIAS
+        // =========================
+        public async Task<IReadOnlyList<MateriaAdminResponse>> ObtenerMateriasAsync(CancellationToken cancellationToken = default)
+        {
+            var materias = await _materiaDataService.ObtenerTodasLasMateriasAsync();
+            return materias.Select(AdminBusinessMapper.ToMateriaResponse).ToList();
+        }
+
+        public async Task<MateriaAdminResponse> CrearMateriaAsync(CrearMateriaRequest request, CancellationToken cancellationToken = default)
+        {
+            var model = new MateriaDataModel
+            {
+                Nombre      = request.nombre,
+                Descripcion = request.descripcion,
+                Activo      = true,
+            };
+            var created = await _materiaDataService.CrearMateriaAsync(model);
+            return AdminBusinessMapper.ToMateriaResponse(created);
+        }
+
+        public async Task<MateriaAdminResponse> ActualizarMateriaAsync(int id_materia, ActualizarMateriaRequest request, CancellationToken cancellationToken = default)
+        {
+            var model = new MateriaDataModel
+            {
+                IdMateria   = id_materia,
+                Nombre      = request.nombre,
+                Descripcion = request.descripcion,
+                Activo      = request.activo,
+            };
+            var updated = await _materiaDataService.ActualizarMateriaAsync(id_materia, model);
+            return AdminBusinessMapper.ToMateriaResponse(updated);
+        }
+
+        public async Task EliminarMateriaAsync(int id_materia, CancellationToken cancellationToken = default)
+        {
+            await _materiaDataService.EliminarMateriaAsync(id_materia);
         }
 
         // =========================

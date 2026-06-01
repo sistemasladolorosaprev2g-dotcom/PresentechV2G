@@ -184,9 +184,10 @@ public class AdminController : AdminBaseController
         await _adminService.EliminarHorarioAsync(id, idHorario, cancellationToken);
         return Ok(ApiResponse<string>.Ok("OK", "Horario eliminado exitosamente."));
     }
-    // --------------------------------------------------------------------------
+
+    // ══════════════════════════════════════════════════════════════════════════
     // ESTUDIANTES
-    // --------------------------------------------------------------------------
+    // ══════════════════════════════════════════════════════════════════════════
 
     [HttpGet("estudiantes")]
     [ProducesResponseType(typeof(ApiResponse<IReadOnlyList<EstudianteAdminResponse>>), StatusCodes.Status200OK)]
@@ -211,5 +212,43 @@ public class AdminController : AdminBaseController
     {
         var result = await _adminService.AsignarParaleloAsync(id, idParalelo, cancellationToken);
         return Ok(ApiResponse<EstudianteAdminResponse>.Ok(result, "Estudiante asignado al paralelo exitosamente."));
+    }
+
+    // ══════════════════════════════════════════════════════════════════════════
+    // MATERIAS
+    // ══════════════════════════════════════════════════════════════════════════
+
+    [HttpGet("materias")]
+    [ProducesResponseType(typeof(ApiResponse<IReadOnlyList<MateriaAdminResponse>>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> ObtenerMaterias(CancellationToken cancellationToken)
+    {
+        var result = await _adminService.ObtenerMateriasAsync(cancellationToken);
+        return Ok(ApiResponse<IReadOnlyList<MateriaAdminResponse>>.Ok(result, "Consulta exitosa."));
+    }
+
+    [HttpPost("materias")]
+    [ProducesResponseType(typeof(ApiResponse<MateriaAdminResponse>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> CrearMateria([FromBody] CrearMateriaRequest request, CancellationToken cancellationToken)
+    {
+        var result = await _adminService.CrearMateriaAsync(request, cancellationToken);
+        return Ok(ApiResponse<MateriaAdminResponse>.Ok(result, "Materia creada exitosamente."));
+    }
+
+    [HttpPut("materias/{id:int}")]
+    [ProducesResponseType(typeof(ApiResponse<MateriaAdminResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> ActualizarMateria(int id, [FromBody] ActualizarMateriaRequest request, CancellationToken cancellationToken)
+    {
+        var result = await _adminService.ActualizarMateriaAsync(id, request, cancellationToken);
+        return Ok(ApiResponse<MateriaAdminResponse>.Ok(result, "Materia actualizada exitosamente."));
+    }
+
+    [HttpDelete("materias/{id:int}")]
+    [ProducesResponseType(typeof(ApiResponse<string>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> EliminarMateria(int id, CancellationToken cancellationToken)
+    {
+        await _adminService.EliminarMateriaAsync(id, cancellationToken);
+        return Ok(ApiResponse<string>.Ok("OK", "Materia desactivada exitosamente."));
     }
 }

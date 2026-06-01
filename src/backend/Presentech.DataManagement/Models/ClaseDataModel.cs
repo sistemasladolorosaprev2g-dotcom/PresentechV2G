@@ -16,7 +16,8 @@ namespace Presentech.DataManagement.Models
         // =========================
         // DATOS DE LA CLASE
         // =========================
-        public string materia { get; set; } = null!;
+        public int id_materia { get; set; }
+        public string nombre_materia { get; set; } = null!;
         public string? observaciones { get; set; }
 
         // =========================

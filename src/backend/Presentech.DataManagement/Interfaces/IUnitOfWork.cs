@@ -11,6 +11,7 @@ namespace Presentech.DataManagement.Interfaces
         IProfesorRepository ProfesorRepository { get; }
         IEstudianteRepository EstudianteRepository { get; }
         IParaleloRepository ParaleloRepository { get; }
+        IMateriaRepository MateriaRepository { get; }
         IClaseRepository ClaseRepository { get; }
         IClaseHorarioRepository ClaseHorarioRepository { get; }
         IRegistroAsistenciaRepository RegistroAsistenciaRepository { get; }

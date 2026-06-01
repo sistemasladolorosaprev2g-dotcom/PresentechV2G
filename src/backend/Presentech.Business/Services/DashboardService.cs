@@ -65,7 +65,7 @@ namespace Presentech.Business.Services
                 {
                     IdEstudiante = g.Key,
                     Faltas = g.Count(),
-                    ClasesNombres = g.Select(a => a.RegistroAsistencia.ClaseHorario.Clase.materia).Distinct().ToList()
+                    ClasesNombres = g.Select(a => a.RegistroAsistencia.ClaseHorario.Clase.Materia.Nombre).Distinct().ToList()
                 })
                 .Where(x => x.Faltas >= 2)
                 .ToListAsync(cancellationToken);

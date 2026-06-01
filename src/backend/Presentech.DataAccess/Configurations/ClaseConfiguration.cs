@@ -25,9 +25,8 @@ namespace Presentech.DataAccess.Configurations
             // =========================
             // DATOS DE LA CLASE
             // =========================
-            builder.Property(c => c.materia)
-                   .IsRequired()
-                   .HasMaxLength(100);
+            builder.Property(c => c.id_materia)
+                   .IsRequired();
 
             builder.Property(c => c.observaciones);
 
@@ -62,6 +61,11 @@ namespace Presentech.DataAccess.Configurations
                    .WithMany(p => p.Clases)
                    .HasForeignKey(c => c.id_paralelo)
                    .HasConstraintName("FK_CLASES_PARALELO");
+
+            builder.HasOne(c => c.Materia)
+                   .WithMany()
+                   .HasForeignKey(c => c.id_materia)
+                   .HasConstraintName("fk_clases_materias");
 
             builder.HasMany(c => c.ClasesHorario)
                    .WithOne(ch => ch.Clase)

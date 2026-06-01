@@ -16,6 +16,7 @@ namespace Presentech.DataManagement.Services
         private IProfesorRepository?           _profesorRepository;
         private IEstudianteRepository?         _estudianteRepository;
         private IParaleloRepository?           _paraleloRepository;
+        private IMateriaRepository?            _materiaRepository;
         private IClaseRepository?              _claseRepository;
         private IClaseHorarioRepository?       _claseHorarioRepository;
         private IRegistroAsistenciaRepository? _registroAsistenciaRepository;
@@ -40,6 +41,9 @@ namespace Presentech.DataManagement.Services
 
         public IParaleloRepository ParaleloRepository =>
             _paraleloRepository ??= new ParaleloRepository(_context);
+
+        public IMateriaRepository MateriaRepository =>
+            _materiaRepository ??= new MateriaRepository(_context);
 
         public IClaseRepository ClaseRepository =>
             _claseRepository ??= new ClaseRepository(_context);

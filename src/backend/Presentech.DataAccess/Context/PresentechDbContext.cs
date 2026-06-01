@@ -20,6 +20,7 @@ namespace Presentech.DataAccess.Context
         public DbSet<ParaleloEntity> Paralelos => Set<ParaleloEntity>();
         public DbSet<ParaleloEstudianteEntity> ParaleloEstudiantes => Set<ParaleloEstudianteEntity>();
         public DbSet<DiaSemanaEntity> DiasSemana => Set<DiaSemanaEntity>();
+        public DbSet<MateriaEntity> Materias => Set<MateriaEntity>();
         public DbSet<ClaseEntity> Clases => Set<ClaseEntity>();
         public DbSet<ClaseHorarioEntity> ClasesHorario => Set<ClaseHorarioEntity>();
         public DbSet<RegistroAsistenciaEntity> RegistrosAsistencia => Set<RegistroAsistenciaEntity>();
@@ -33,6 +34,7 @@ namespace Presentech.DataAccess.Context
             modelBuilder.ApplyConfiguration(new ParaleloConfiguration());
             modelBuilder.ApplyConfiguration(new ParaleloEstudianteConfiguration());
             modelBuilder.ApplyConfiguration(new DiaSemanaConfiguration());
+            modelBuilder.ApplyConfiguration(new MateriaConfiguration());
             modelBuilder.ApplyConfiguration(new ClaseConfiguration());
             modelBuilder.ApplyConfiguration(new ClaseHorarioConfiguration());
             modelBuilder.ApplyConfiguration(new RegistroAsistenciaConfiguration());

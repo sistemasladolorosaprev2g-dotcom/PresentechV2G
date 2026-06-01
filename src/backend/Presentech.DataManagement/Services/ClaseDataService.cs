@@ -50,7 +50,7 @@ namespace Presentech.DataManagement.Services
             {
                 id_profesor   = model.id_profesor,
                 id_paralelo   = model.id_paralelo,
-                materia       = model.materia,
+                id_materia    = model.id_materia,
                 observaciones = model.observaciones,
                 activo        = true,
                 created_at    = DateTime.UtcNow,
@@ -78,7 +78,7 @@ namespace Presentech.DataManagement.Services
                 id_clase      = model.id_clase,
                 id_profesor   = model.id_profesor,
                 id_paralelo   = model.id_paralelo,
-                materia       = model.materia,
+                id_materia    = model.id_materia,
                 observaciones = model.observaciones,
                 activo        = true,
                 created_at    = entity.created_at,
@@ -101,7 +101,7 @@ namespace Presentech.DataManagement.Services
                 id_clase    = entity.id_clase,
                 id_profesor = entity.id_profesor,
                 id_paralelo = entity.id_paralelo,
-                materia     = entity.materia,
+                id_materia  = entity.id_materia,
                 activo      = true,
                 created_at  = entity.created_at,
             };

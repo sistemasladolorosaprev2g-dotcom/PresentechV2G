@@ -64,7 +64,8 @@ namespace Presentech.Business.DTOs.Admin
         public string nombre_profesor { get; set; } = string.Empty;
         public int id_paralelo { get; set; }
         public string nombre_paralelo { get; set; } = string.Empty;
-        public string materia { get; set; } = string.Empty;
+        public int id_materia { get; set; }
+        public string nombre_materia { get; set; } = string.Empty;
         public string? observaciones { get; set; }
         public List<HorarioAdminResponse> horarios { get; set; } = new();
     }
@@ -73,7 +74,7 @@ namespace Presentech.Business.DTOs.Admin
     {
         public int id_profesor { get; set; }
         public int id_paralelo { get; set; }
-        public string materia { get; set; } = string.Empty;
+        public int id_materia { get; set; }
         public string? observaciones { get; set; }
     }
 
@@ -81,7 +82,7 @@ namespace Presentech.Business.DTOs.Admin
     {
         public int id_profesor { get; set; }
         public int id_paralelo { get; set; }
-        public string materia { get; set; } = string.Empty;
+        public int id_materia { get; set; }
         public string? observaciones { get; set; }
     }
 
@@ -117,5 +118,27 @@ namespace Presentech.Business.DTOs.Admin
     {
         public string nombres { get; set; } = string.Empty;
         public string apellidos { get; set; } = string.Empty;
+    }
+
+    // -- Materias -----------------------------------------------------------------
+    public class MateriaAdminResponse
+    {
+        public int id_materia { get; set; }
+        public string nombre { get; set; } = string.Empty;
+        public string? descripcion { get; set; }
+        public bool activo { get; set; }
+    }
+
+    public class CrearMateriaRequest
+    {
+        public string nombre { get; set; } = string.Empty;
+        public string? descripcion { get; set; }
+    }
+
+    public class ActualizarMateriaRequest
+    {
+        public string nombre { get; set; } = string.Empty;
+        public string? descripcion { get; set; }
+        public bool activo { get; set; }
     }
 }

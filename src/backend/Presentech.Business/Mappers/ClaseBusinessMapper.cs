@@ -9,7 +9,7 @@ namespace Presentech.Business.Mappers
         {
             id_clase        = model.id_clase,
             id_paralelo     = model.id_paralelo,
-            materia         = model.materia,
+            materia         = model.nombre_materia,
             nombre_paralelo = model.nombre_paralelo,
             horarios        = model.horarios.Select(ToHorarioResponse).ToList(),
         };

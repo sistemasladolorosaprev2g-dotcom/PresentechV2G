@@ -16,7 +16,7 @@ namespace Presentech.DataAccess.Entities
         // =========================
         // DATOS DE LA CLASE
         // =========================
-        public string materia { get; set; } = null!;
+        public int id_materia { get; set; }
         public string? observaciones { get; set; }
 
         // =========================
@@ -30,6 +30,7 @@ namespace Presentech.DataAccess.Entities
         // =========================
         public ProfesorEntity Profesor { get; set; } = null!;
         public ParaleloEntity Paralelo { get; set; } = null!;
+        public MateriaEntity Materia { get; set; } = null!;
         public ICollection<ClaseHorarioEntity> ClasesHorario { get; set; } = new List<ClaseHorarioEntity>();
     }
 }

@@ -41,7 +41,8 @@ namespace Presentech.Business.Mappers
             nombre_profesor = nombre_profesor,
             id_paralelo     = model.id_paralelo,
             nombre_paralelo = model.nombre_paralelo,
-            materia         = model.materia,
+            id_materia      = model.id_materia,
+            nombre_materia  = model.nombre_materia,
             observaciones   = model.observaciones,
             horarios        = model.horarios.Select(h => new HorarioAdminResponse
             {
@@ -51,6 +52,17 @@ namespace Presentech.Business.Mappers
                 hora_inicio = h.hora_inicio.ToString(@"HH\:mm"),
                 hora_fin    = h.hora_fin.ToString(@"HH\:mm"),
             }).ToList(),
+        };
+
+        // =========================
+        // MATERIA
+        // =========================
+        public static MateriaAdminResponse ToMateriaResponse(MateriaDataModel model) => new()
+        {
+            id_materia  = model.IdMateria,
+            nombre      = model.Nombre,
+            descripcion = model.Descripcion,
+            activo      = model.Activo,
         };
     }
 }

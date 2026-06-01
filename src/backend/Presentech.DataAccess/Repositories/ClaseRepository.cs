@@ -23,10 +23,11 @@ namespace Presentech.DataAccess.Repositories
                 .AsNoTracking()
                 .Include(c => c.Profesor)
                 .Include(c => c.Paralelo)
+                .Include(c => c.Materia)
                 .Include(c => c.ClasesHorario)
                     .ThenInclude(ch => ch.DiaSemana)
                 .Where(c => c.activo)
-                .OrderBy(c => c.materia)
+                .OrderBy(c => c.Materia.Nombre)
                 .ToListAsync(cancellationToken);
         }
 
@@ -35,10 +36,11 @@ namespace Presentech.DataAccess.Repositories
             return await _context.Clases
                 .AsNoTracking()
                 .Include(c => c.Paralelo)
+                .Include(c => c.Materia)
                 .Include(c => c.ClasesHorario)
                     .ThenInclude(ch => ch.DiaSemana)
                 .Where(c => c.id_profesor == id_profesor && c.activo)
-                .OrderBy(c => c.materia)
+                .OrderBy(c => c.Materia.Nombre)
                 .ToListAsync(cancellationToken);
         }
 
@@ -53,6 +55,7 @@ namespace Presentech.DataAccess.Repositories
         {
             return await _context.Clases
                 .Include(c => c.Paralelo)
+                .Include(c => c.Materia)
                 .Include(c => c.ClasesHorario)
                     .ThenInclude(ch => ch.DiaSemana)
                 .AsNoTracking()

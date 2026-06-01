@@ -42,6 +42,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IClaseHorarioDataService, ClaseHorarioDataService>();
         services.AddScoped<IAsistenciaDataService, AsistenciaDataService>();
         services.AddScoped<IAdministradorDataService, AdministradorDataService>();
+        services.AddScoped<IMateriaDataService, MateriaDataService>();
 
         // =========================
         // JWT SETTINGS (para AuthService)
