@@ -18,29 +18,6 @@ export function AsistenciaForm({
   return (
     <>
       <form className="grid gap-4" onSubmit={onSubmit}>
-        <section className="rounded-lg rounded-xl border border-border/50 bg-card/60 backdrop-blur-sm shadow-sm transition-all duration-300 p-4 shadow-sm">
-          <p className="mb-3 text-sm font-medium text-foreground">Resumen</p>
-          <div className="flex flex-wrap gap-4">
-            <SummaryItem colorClass="bg-success" label="Presentes" value={resumen.presentes} />
-            <SummaryItem colorClass="bg-destructive" label="Ausentes" value={resumen.ausentes} />
-            {resumen.atrasados > 0 ? (
-              <SummaryItem colorClass="bg-warning" label="Atrasados" value={resumen.atrasados} />
-            ) : null}
-          </div>
-        </section>
-
-        <section className="rounded-lg rounded-xl border border-border/50 bg-card/60 backdrop-blur-sm shadow-sm transition-all duration-300 p-4 shadow-sm">
-          <label className="block text-left text-sm font-medium text-foreground">
-            Observaciones de la sesión (opcional)
-            <textarea
-              className="mt-2 min-h-20 w-full resize-y rounded-md border border-input-border bg-card px-3 py-2 text-sm text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
-              placeholder="Comentarios generales sobre la clase"
-              value={observacionesSesion}
-              onChange={(event) => setObservacionesSesion(event.target.value)}
-            />
-          </label>
-        </section>
-
         <div>
           <h3 className="mb-3 text-sm font-medium text-foreground">
             Estudiantes ({asistencias.length})
@@ -55,6 +32,17 @@ export function AsistenciaForm({
             ))}
           </div>
         </div>
+
+        <section className="rounded-lg rounded-xl border border-border/50 bg-card/60 backdrop-blur-sm shadow-sm transition-all duration-300 p-4 shadow-sm mt-4">
+          <p className="mb-3 text-sm font-medium text-foreground">Resumen</p>
+          <div className="flex flex-wrap gap-4">
+            <SummaryItem colorClass="bg-success" label="Presentes" value={resumen.presentes} />
+            <SummaryItem colorClass="bg-destructive" label="Ausentes" value={resumen.ausentes} />
+            {resumen.atrasados > 0 ? (
+              <SummaryItem colorClass="bg-warning" label="Atrasados" value={resumen.atrasados} />
+            ) : null}
+          </div>
+        </section>
 
         <div className="fixed inset-x-0 bottom-16 z-40 border-t border-border bg-background p-4 md:relative md:bottom-auto md:border-t-0 md:p-0">
           <Button className="h-12 w-full" type="submit" isLoading={isSaving}>

@@ -92,9 +92,12 @@ export function AsistenciaPage() {
       }
 
       setShowConfirm(false)
+      
+      // Mensaje de confirmación explícito antes de redirigir
       setTimeout(() => {
+        alert(isEditing ? '¡Lista de asistencia actualizada con éxito!' : '¡Lista de asistencia guardada con éxito!')
         navigate('/clases')
-      }, 2000)
+      }, 100)
     } catch (requestError) {
       setSaveError(getApiErrorMessage(requestError))
     } finally {
