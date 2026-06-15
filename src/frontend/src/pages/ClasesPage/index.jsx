@@ -6,6 +6,7 @@ import { AppLayout } from '../../components/layout'
 import { getApiData, getApiErrorMessage } from '../../services/api'
 import { obtenerMisClases } from '../../services/clasesService'
 import { DashboardView } from '../../components/dashboard'
+import { ReportesView } from '../../components/reportes'
 
 export function ClasesPage() {
   const [clases, setClases] = useState([])
@@ -16,6 +17,7 @@ export function ClasesPage() {
   const tabs = [
     { id: 'dashboard', label: 'Dashboard' },
     { id: 'clases', label: 'Mis Clases' },
+    { id: 'reportes', label: 'Reportes' },
   ]
 
   const loadClases = useCallback(async () => {
@@ -98,6 +100,7 @@ export function ClasesPage() {
         {/* Contenido del Tab */}
         <div className="rounded-2xl border border-border/50 bg-card/80 backdrop-blur-md p-4 md:p-6 shadow-xl animate-fade-in">
           {activeTab === 'dashboard' && <DashboardView role="profesor" />}
+          {activeTab === 'reportes' && <ReportesView />}
           
           {activeTab === 'clases' && (
             <>
