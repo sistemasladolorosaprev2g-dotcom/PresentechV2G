@@ -17,12 +17,12 @@ export function AsistenciaForm({
 }) {
   return (
     <>
-      <form className="grid gap-4" onSubmit={onSubmit}>
-        <div>
+      <form className="grid w-full min-w-0 gap-4" onSubmit={onSubmit}>
+        <div className="min-w-0">
           <h3 className="mb-3 text-sm font-medium text-foreground">
             Estudiantes ({asistencias.length})
           </h3>
-          <div className="grid gap-4">
+          <div className="grid min-w-0 gap-4">
             {asistencias.map((asistencia) => (
               <AsistenciaItem
                 asistencia={asistencia}
@@ -33,9 +33,9 @@ export function AsistenciaForm({
           </div>
         </div>
 
-        <section className="rounded-lg rounded-xl border border-border/50 bg-card/60 backdrop-blur-sm shadow-sm transition-all duration-300 p-4 shadow-sm mt-4">
+        <section className="mt-4 w-full min-w-0 overflow-hidden rounded-xl border border-border/50 bg-card/60 p-4 shadow-sm backdrop-blur-sm transition-all duration-300">
           <p className="mb-3 text-sm font-medium text-foreground">Resumen</p>
-          <div className="flex flex-wrap gap-4">
+          <div className="flex min-w-0 flex-wrap gap-4">
             <SummaryItem colorClass="bg-success" label="Presentes" value={resumen.presentes} />
             <SummaryItem colorClass="bg-destructive" label="Ausentes" value={resumen.ausentes} />
             {resumen.atrasados > 0 ? (
@@ -44,7 +44,7 @@ export function AsistenciaForm({
           </div>
         </section>
 
-        <div>
+        <div className="w-full min-w-0">
           <Button className="h-12 w-full" type="submit" isLoading={isSaving}>
             <Save aria-hidden="true" className="h-4 w-4" />
             {isEditing ? 'Actualizar asistencia' : 'Guardar asistencia'}
@@ -68,9 +68,9 @@ export function AsistenciaForm({
 
 function SummaryItem({ colorClass, label, value }) {
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex min-w-0 items-center gap-2">
       <div className={`h-3 w-3 rounded-full ${colorClass}`} />
-      <span className="text-sm text-muted-foreground">
+      <span className="min-w-0 text-sm text-muted-foreground">
         {label}: <span className="font-medium text-foreground">{value}</span>
       </span>
     </div>

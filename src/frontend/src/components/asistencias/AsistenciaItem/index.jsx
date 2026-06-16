@@ -19,22 +19,22 @@ export function AsistenciaItem({ asistencia, onChange }) {
   }
 
   return (
-    <article className="rounded-lg rounded-xl border border-border/50 bg-card/60 backdrop-blur-sm shadow-sm transition-all duration-300 p-4 shadow-sm">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <article className="w-full overflow-hidden rounded-xl border border-border/50 bg-card/60 p-4 shadow-sm backdrop-blur-sm transition-all duration-300">
+      <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-3">
-            <h3 className="truncate font-medium text-foreground">
+          <div className="flex min-w-0 flex-wrap items-start gap-2">
+            <h3 className="min-w-0 flex-1 break-words text-sm font-medium leading-snug text-foreground sm:text-base">
               {asistencia.nombres_estudiante} {asistencia.apellidos_estudiante}
             </h3>
             <Badge status={status} />
           </div>
         </div>
 
-        <div className="flex items-center gap-4 shrink-0">
+        <div className="grid w-full grid-cols-3 gap-3 sm:w-auto sm:flex sm:shrink-0 sm:items-center sm:gap-4">
           <button
             type="button"
             title="Presente"
-            className={`flex h-12 w-12 items-center justify-center rounded-full transition-all duration-300 ${
+            className={`mx-auto flex h-12 w-12 items-center justify-center rounded-full transition-all duration-300 ${
               status === 'presente'
                 ? 'bg-success text-white shadow-md ring-2 ring-success ring-offset-2 ring-offset-background scale-110'
                 : 'bg-card border border-border text-muted-foreground hover:bg-success/10 hover:text-success'
@@ -46,7 +46,7 @@ export function AsistenciaItem({ asistencia, onChange }) {
           <button
             type="button"
             title="Ausente"
-            className={`flex h-12 w-12 items-center justify-center rounded-full transition-all duration-300 ${
+            className={`mx-auto flex h-12 w-12 items-center justify-center rounded-full transition-all duration-300 ${
               status === 'ausente'
                 ? 'bg-destructive text-white shadow-md ring-2 ring-destructive ring-offset-2 ring-offset-background scale-110'
                 : 'bg-card border border-border text-muted-foreground hover:bg-destructive/10 hover:text-destructive'
@@ -58,7 +58,7 @@ export function AsistenciaItem({ asistencia, onChange }) {
           <button
             type="button"
             title="Atrasado"
-            className={`flex h-12 w-12 items-center justify-center rounded-full transition-all duration-300 ${
+            className={`mx-auto flex h-12 w-12 items-center justify-center rounded-full transition-all duration-300 ${
               status === 'atrasado'
                 ? 'bg-warning text-white shadow-md ring-2 ring-warning ring-offset-2 ring-offset-background scale-110'
                 : 'bg-card border border-border text-muted-foreground hover:bg-warning/10 hover:text-warning'
