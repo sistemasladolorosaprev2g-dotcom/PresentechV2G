@@ -8,7 +8,8 @@ import { crearEstudiante } from '../../services/adminService'
 
 const videoConstraints = {
   width: 1280,
-  height: 720,
+  height: 1920,
+  aspectRatio: 0.6666667,
   facingMode: 'environment',
 }
 
@@ -231,6 +232,7 @@ export function EscanearListaButton({ children, onImportSuccess }) {
         cancelLabel={hasImportSummary ? 'Nuevo escaneo' : hasResults ? 'Cerrar' : 'Cancelar'}
         confirmLabel={confirmLabel}
         isSubmitting={isProcessing || isImporting}
+        maxWidth="max-w-md sm:max-w-2xl"
         onClose={hasImportSummary ? retake : closeModal}
         onConfirm={onConfirm}
       >
@@ -238,8 +240,8 @@ export function EscanearListaButton({ children, onImportSuccess }) {
           <div className="flex w-full items-start gap-3 rounded-lg border border-primary/20 bg-primary/5 px-3 py-3 text-sm text-foreground">
             <FileText className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
             <p>
-              Captura una foto clara de la lista. El OCR detectara estudiantes y los mostrara
-              para revision antes de cualquier importacion.
+              Ubica la hoja completa dentro del marco, con buena luz y sin inclinarla. El OCR
+              mostrara los estudiantes para revision antes de importar.
             </p>
           </div>
 
@@ -261,7 +263,8 @@ export function EscanearListaButton({ children, onImportSuccess }) {
             </div>
           ) : null}
 
-          <div className="relative aspect-video w-full max-w-2xl overflow-hidden rounded-xl border border-border/50 bg-black shadow-inner">
+          <div className="w-full max-w-sm rounded-2xl border border-border/60 bg-foreground/90 p-3 shadow-inner sm:max-w-xl">
+            <div className="relative mx-auto aspect-[3/4] max-h-[58svh] w-full overflow-hidden rounded-xl bg-black sm:aspect-[4/3] sm:max-h-[60vh]">
             {!imgSrc ? (
               <Webcam
                 audio={false}
@@ -274,18 +277,36 @@ export function EscanearListaButton({ children, onImportSuccess }) {
               <img
                 src={imgSrc}
                 alt="Documento capturado"
-                className="h-full w-full bg-muted/20 object-contain"
+                className="h-full w-full bg-black object-cover"
               />
             )}
 
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/15 via-transparent to-black/20" />
+            <div className="pointer-events-none absolute inset-x-[14%] inset-y-[5%] rounded-xl border-[3px] border-dashed border-white/70 shadow-[0_0_0_999px_rgba(0,0,0,0.28)] sm:inset-x-[20%] sm:inset-y-[7%]">
+              <span className="absolute left-1/2 top-1/2 w-44 -translate-x-1/2 -translate-y-1/2 rounded bg-black/60 px-3 py-1 text-center text-xs text-white/90 backdrop-blur-sm">
+                Coloca la hoja dentro de este marco
+              </span>
+            </div>
+
             {!imgSrc ? (
-              <div className="pointer-events-none absolute inset-0 m-8 flex items-center justify-center rounded-lg border-[3px] border-dashed border-white/40">
-                <span className="rounded bg-black/50 px-3 py-1 text-xs text-white/80 backdrop-blur-sm">
-                  Alinee el documento aqui
-                </span>
+              <div className="pointer-events-none absolute bottom-3 left-3 right-3 rounded-lg bg-black/60 px-3 py-2 text-center text-xs text-white/85 backdrop-blur-sm">
+                Captura la hoja vertical, completa y enfocada.
               </div>
-            ) : null}
+            ) : (
+              <div className="pointer-events-none absolute bottom-3 left-3 right-3 rounded-lg bg-black/60 px-3 py-2 text-center text-xs text-white/85 backdrop-blur-sm">
+                Si la hoja no quedo dentro del marco, toma otra foto.
+              </div>
+            )}
+            </div>
           </div>
+
+          {!imgSrc ? (
+            <div className="grid w-full gap-2 rounded-xl border border-border/60 bg-muted/30 p-3 text-xs text-muted-foreground sm:grid-cols-3">
+              <span>Manten la hoja recta.</span>
+              <span>Evita sombras sobre la tabla.</span>
+              <span>Que se lean numeros, apellidos y nombres.</span>
+            </div>
+          ) : null}
 
           {!hasResults ? (
             <div className="flex w-full flex-col justify-center gap-3 sm:flex-row">

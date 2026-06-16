@@ -6,6 +6,7 @@ export function Modal({
   confirmLabel = 'Confirmar',
   isOpen,
   isSubmitting = false,
+  maxWidth = 'max-w-md',
   onClose,
   onConfirm,
   title,
@@ -21,7 +22,7 @@ export function Modal({
     >
       <section
         aria-modal="true"
-        className="w-full max-w-md min-h-[70vh] sm:min-h-0 max-h-[calc(100svh-6rem)] overflow-y-auto rounded-xl border border-border/50 bg-card/90 backdrop-blur-md p-6 text-left shadow-2xl sm:max-h-[calc(100svh-2rem)] animate-slide-up flex flex-col"
+        className={`w-full ${maxWidth} min-h-[70vh] sm:min-h-0 max-h-[calc(100svh-6rem)] overflow-y-auto rounded-xl border border-border/50 bg-card/90 backdrop-blur-md p-6 text-left shadow-2xl sm:max-h-[calc(100svh-2rem)] animate-slide-up flex flex-col`}
         role="dialog"
         onMouseDown={(event) => event.stopPropagation()}
       >
