@@ -30,7 +30,7 @@ const contactItems = [
 export function Footer({ withMobileNavSpacing = false }) {
   return (
     <footer
-      className={`border-t border-border/70 bg-card/80 backdrop-blur-md ${
+      className={`relative z-0 border-t border-border/70 bg-card/80 backdrop-blur-md ${
         withMobileNavSpacing ? 'pb-16 md:pb-0' : ''
       }`}
     >

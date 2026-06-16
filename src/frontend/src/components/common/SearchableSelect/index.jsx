@@ -46,7 +46,7 @@ export function SearchableSelect({
         </div>
 
         {isOpen && (
-          <div className="absolute z-50 mt-1 max-h-96 w-full overflow-auto rounded-md border border-border bg-background py-1 shadow-md">
+          <div className="absolute z-[9999] mt-1 max-h-96 w-full overflow-auto rounded-md border border-border bg-background py-1 shadow-2xl">
             <div className="sticky top-0 flex items-center border-b border-border bg-background px-4 py-3">
               <Search className="mr-2 h-5 w-5 text-muted-foreground shrink-0" />
               <input
