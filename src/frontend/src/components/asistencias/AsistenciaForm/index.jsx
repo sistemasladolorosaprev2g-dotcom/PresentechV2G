@@ -44,7 +44,7 @@ export function AsistenciaForm({
           </div>
         </section>
 
-        <div className="fixed inset-x-0 bottom-16 z-40 border-t border-border bg-background p-4 md:relative md:bottom-auto md:border-t-0 md:p-0">
+        <div>
           <Button className="h-12 w-full" type="submit" isLoading={isSaving}>
             <Save aria-hidden="true" className="h-4 w-4" />
             {isEditing ? 'Actualizar asistencia' : 'Guardar asistencia'}

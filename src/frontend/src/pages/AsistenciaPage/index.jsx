@@ -107,7 +107,7 @@ export function AsistenciaPage() {
 
   return (
     <AppLayout title="Asistencia">
-      <section className="container mx-auto max-w-3xl px-4 py-4 pb-28 md:py-6 md:pb-28">
+      <section className="container mx-auto max-w-3xl px-4 py-4 md:py-6">
         <div className="mb-6">
           <Button asChild className="mb-3 -ml-2 min-h-9 px-2" variant="ghost">
             <Link to="/clases">
