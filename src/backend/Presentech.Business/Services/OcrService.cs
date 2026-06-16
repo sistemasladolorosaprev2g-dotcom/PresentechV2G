@@ -164,6 +164,7 @@ namespace Presentech.Business.Services
         {
             var students = new List<EstudianteOcrDto>();
             var warnings = new List<string>();
+            string? pendingApellidos = null;
             var lines = text
                 .Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
                 .Select(NormalizeLine)
@@ -172,38 +173,64 @@ namespace Presentech.Business.Services
 
             foreach (var line in lines)
             {
-                if (ShouldIgnore(line))
+                if (ShouldIgnore(line) || IsStandaloneNumber(line))
                     continue;
 
                 var match = StudentLineRegex().Match(line);
                 if (!match.Success)
+                {
+                    if (pendingApellidos is not null && IsLikelyNameLine(line))
+                    {
+                        students.Add(CreateStudent(pendingApellidos, line));
+                        pendingApellidos = null;
+                    }
+
                     continue;
+                }
 
                 var studentText = match.Groups["student"].Value.Trim();
-                var tokens = studentText
-                    .Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-                    .Where(token => token.Length > 1)
-                    .ToList();
+                var tokens = TokenizeName(studentText);
 
                 if (tokens.Count < 3)
                 {
-                    warnings.Add($"Fila omitida por datos insuficientes: {line}");
+                    if (tokens.Count >= 2)
+                    {
+                        pendingApellidos = string.Join(' ', tokens.Take(2));
+                    }
+
                     continue;
                 }
 
                 var apellidos = string.Join(' ', tokens.Take(2));
                 var nombres = string.Join(' ', tokens.Skip(2));
 
-                students.Add(new EstudianteOcrDto
-                {
-                    apellidos = apellidos,
-                    nombres = nombres,
-                    confianza = 0.75m,
-                    observacion = "Detectado automaticamente. Revise antes de importar.",
-                });
+                students.Add(CreateStudent(apellidos, nombres));
+                pendingApellidos = null;
             }
 
+            if (pendingApellidos is not null)
+                warnings.Add($"Fila omitida porque no se detectaron nombres para: {pendingApellidos}");
+
             return (students, warnings);
+        }
+
+        private static EstudianteOcrDto CreateStudent(string apellidos, string nombres)
+        {
+            return new EstudianteOcrDto
+            {
+                apellidos = apellidos.Trim(),
+                nombres = nombres.Trim(),
+                confianza = 0.75m,
+                observacion = "Detectado automaticamente. Revise antes de importar.",
+            };
+        }
+
+        private static List<string> TokenizeName(string text)
+        {
+            return text
+                .Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .Where(token => token.Length > 1)
+                .ToList();
         }
 
         private static string NormalizeLine(string line)
@@ -224,8 +251,24 @@ namespace Presentech.Business.Services
                 line.StartsWith(prefix, StringComparison.OrdinalIgnoreCase));
         }
 
+        private static bool IsStandaloneNumber(string line)
+        {
+            return StandaloneNumberRegex().IsMatch(line);
+        }
+
+        private static bool IsLikelyNameLine(string line)
+        {
+            return !ShouldIgnore(line) &&
+                !IsStandaloneNumber(line) &&
+                !StudentLineRegex().IsMatch(line) &&
+                TokenizeName(line).Count >= 2;
+        }
+
         [GeneratedRegex(@"^\s*(?<number>\d{1,2})[\.\)\-\s]+(?<student>[\p{L}\s]+)$")]
         private static partial Regex StudentLineRegex();
+
+        [GeneratedRegex(@"^\d{1,3}$")]
+        private static partial Regex StandaloneNumberRegex();
 
         [GeneratedRegex(@"\s+")]
         private static partial Regex MultipleSpacesRegex();
