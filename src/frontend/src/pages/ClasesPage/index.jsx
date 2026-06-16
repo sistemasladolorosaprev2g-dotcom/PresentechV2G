@@ -170,6 +170,26 @@ export function ClasesPage() {
                 <>
                   {!selectedCurso ? (
                     <div>
+                      <div className="mb-6 overflow-hidden rounded-2xl border border-border/50 bg-card/70 shadow-sm">
+                        <div className="border-b border-border/50 px-4 py-3">
+                          <h3 className="text-lg font-semibold text-foreground">
+                            Video tutorial de uso
+                          </h3>
+                          <p className="mt-1 text-sm text-muted-foreground">
+                            Revisa esta guía rápida si necesitas recordar cómo usar la aplicación.
+                          </p>
+                        </div>
+                        <div className="aspect-video bg-muted">
+                          <iframe
+                            className="h-full w-full"
+                            src="https://drive.google.com/file/d/1t-1KDgvkTR5iqHv_nl06fqmmqgSFTQlE/preview"
+                            title="Video tutorial de PresenTech"
+                            allow="autoplay; encrypted-media"
+                            allowFullScreen
+                          />
+                        </div>
+                      </div>
+
                       <div className="mb-5">
                         <h3 className="text-lg font-semibold text-foreground">Selecciona un curso</h3>
                         <p className="mt-1 text-sm text-muted-foreground">
