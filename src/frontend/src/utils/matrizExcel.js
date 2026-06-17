@@ -1,166 +1,223 @@
-function escapeHtml(value) {
-  return String(value ?? '')
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;')
+import * as XLSX from 'xlsx'
+
+const STATUS_LABELS = {
+  P: '✓',
+  X: 'X',
+  '-': '-',
 }
 
 function getMonthGroups(days) {
   const groups = []
 
-  days.forEach((day) => {
+  days.forEach((day, index) => {
     const lastGroup = groups[groups.length - 1]
     if (lastGroup?.month === day.mes) {
       lastGroup.count += 1
     } else {
-      groups.push({ month: day.mes, count: 1 })
+      groups.push({ month: day.mes, startIndex: index, count: 1 })
     }
   })
 
   return groups
 }
 
-function getRowClass(alertLevel) {
-  if (alertLevel === 'rojo') return 'alert-red'
-  if (alertLevel === 'amarillo') return 'alert-yellow'
-  return ''
-}
+function buildRows(matriz) {
+  const summaryHeaders = [
+    'Asist.',
+    'Faltas',
+    'Parc.',
+    'Asist.',
+    'Faltas',
+    'Parc.',
+    'Asist.',
+    'Faltas',
+    'Parc.',
+    'Faltas',
+    'Parc.',
+  ]
 
-function getStatusClass(status) {
-  if (status === 'P') return 'status-present'
-  if (status === 'X') return 'status-absent'
-  if (status === '-') return 'status-partial'
-  return ''
-}
+  const firstRow = ['No.', 'Nombre del Alumno']
+  const secondRow = ['', '']
+  const thirdRow = ['', '']
 
-function summaryCells(summary) {
-  return `
-    <td class="summary present">${summary?.asistencias ?? 0}</td>
-    <td class="summary absent">${summary?.faltas ?? 0}</td>
-    <td class="summary partial">${summary?.parciales ?? 0}</td>
-  `
-}
+  matriz.dias.forEach((day) => {
+    firstRow.push('')
+    secondRow.push(day.dia_mes)
+    thirdRow.push(day.inicial_dia)
+  })
 
-function buildHtml(matriz) {
-  const monthGroups = getMonthGroups(matriz.dias)
-  const totalColumns = matriz.dias.length + 13
+  firstRow.push(
+    'Septiembre - Diciembre',
+    '',
+    '',
+    'Enero - Marzo',
+    '',
+    '',
+    'Abril - Junio',
+    '',
+    '',
+    'Total',
+    '',
+  )
+  secondRow.push(...summaryHeaders)
+  thirdRow.push(...summaryHeaders)
 
-  const monthHeaders = monthGroups
-    .map((group) => `<th colspan="${group.count}" class="month">${escapeHtml(group.month)}</th>`)
-    .join('')
+  const studentRows = matriz.estudiantes.map((student) => {
+    const row = [student.numero, student.nombre_estudiante]
 
-  const dayHeaders = matriz.dias.map((day) => `<th>${day.dia_mes}</th>`).join('')
-  const weekDayHeaders = matriz.dias.map((day) => `<th>${escapeHtml(day.inicial_dia)}</th>`).join('')
-  const summaryHeaders = ['P', 'X', '-', 'P', 'X', '-', 'P', 'X', '-', 'X', '-']
-    .map((label) => `<th>${label}</th>`)
-    .join('')
-
-  const rows = matriz.estudiantes
-    .map((student) => {
-      const dayCells = matriz.dias
-        .map((day) => {
-          const status = student.estados_por_fecha?.[day.fecha] ?? ''
-          return `<td class="${getStatusClass(status)}">${escapeHtml(status)}</td>`
-        })
-        .join('')
-
-      return `
-        <tr class="${getRowClass(student.nivel_alerta)}">
-          <td class="center">${student.numero}</td>
-          <td class="student">${escapeHtml(student.nombre_estudiante)}</td>
-          ${dayCells}
-          ${summaryCells(student.resumen_periodos?.periodo_1)}
-          ${summaryCells(student.resumen_periodos?.periodo_2)}
-          ${summaryCells(student.resumen_periodos?.periodo_3)}
-          <td class="summary absent">${student.total_faltas}</td>
-          <td class="summary partial">${student.total_parciales}</td>
-        </tr>
-      `
+    matriz.dias.forEach((day) => {
+      const status = student.estados_por_fecha?.[day.fecha] ?? ''
+      row.push(STATUS_LABELS[status] ?? '')
     })
-    .join('')
 
-  return `
-    <html>
-      <head>
-        <meta charset="UTF-8" />
-        <style>
-          table { border-collapse: collapse; font-family: Arial, sans-serif; font-size: 11px; }
-          th, td { border: 1px solid #333333; padding: 4px; text-align: center; }
-          .title { background: #72263a; color: #ffffff; font-weight: bold; font-size: 16px; }
-          .subtitle { background: #f5eef0; font-weight: bold; text-align: left; }
-          .month { background: #d9e2f3; font-weight: bold; }
-          .student { min-width: 260px; text-align: left; font-weight: bold; }
-          .center { text-align: center; }
-          .status-present { background: #e6f4ea; color: #137333; font-weight: bold; }
-          .status-absent { background: #fce8e6; color: #b3261e; font-weight: bold; }
-          .status-partial { background: #fff4ce; color: #8a5a00; font-weight: bold; }
-          .alert-yellow td { background: #fff4ce; }
-          .alert-red td { background: #fce8e6; }
-          .alert-yellow .status-present, .alert-red .status-present { background: #d9ead3; }
-          .alert-yellow .status-absent, .alert-red .status-absent { background: #f4cccc; }
-          .alert-yellow .status-partial, .alert-red .status-partial { background: #ffe599; }
-          .summary { font-weight: bold; }
-          .present { color: #137333; }
-          .absent { color: #b3261e; }
-          .partial { color: #8a5a00; }
-        </style>
-      </head>
-      <body>
-        <table>
-          <tr>
-            <th colspan="${totalColumns}" class="title">
-              Matriz anual de asistencia - ${escapeHtml(matriz.paralelo)}
-            </th>
-          </tr>
-          <tr>
-            <td colspan="${totalColumns}" class="subtitle">
-              Anio lectivo: ${escapeHtml(matriz.anio_lectivo)} | Rango: ${escapeHtml(matriz.fecha_inicio)} a ${escapeHtml(matriz.fecha_fin)}
-            </td>
-          </tr>
-          <tr>
-            <th rowspan="3">No.</th>
-            <th rowspan="3">Nombre del Alumno</th>
-            ${monthHeaders}
-            <th colspan="3">Periodo 1</th>
-            <th colspan="3">Periodo 2</th>
-            <th colspan="3">Periodo 3</th>
-            <th colspan="2">Total</th>
-          </tr>
-          <tr>
-            ${dayHeaders}
-            ${summaryHeaders}
-          </tr>
-          <tr>
-            ${weekDayHeaders}
-            ${summaryHeaders.replaceAll('<th>', '<th class="subtitle">')}
-          </tr>
-          ${rows || `<tr><td colspan="${totalColumns}">No hay estudiantes activos en este paralelo.</td></tr>`}
-        </table>
-      </body>
-    </html>
-  `
+    const periodo1 = student.resumen_periodos?.periodo_1 ?? {}
+    const periodo2 = student.resumen_periodos?.periodo_2 ?? {}
+    const periodo3 = student.resumen_periodos?.periodo_3 ?? {}
+
+    row.push(
+      periodo1.asistencias ?? 0,
+      periodo1.faltas ?? 0,
+      periodo1.parciales ?? 0,
+      periodo2.asistencias ?? 0,
+      periodo2.faltas ?? 0,
+      periodo2.parciales ?? 0,
+      periodo3.asistencias ?? 0,
+      periodo3.faltas ?? 0,
+      periodo3.parciales ?? 0,
+      student.total_faltas ?? 0,
+      student.total_parciales ?? 0,
+    )
+
+    return row
+  })
+
+  return [firstRow, secondRow, thirdRow, ...studentRows]
+}
+
+function buildMerges(matriz) {
+  const merges = [
+    { s: { r: 0, c: 0 }, e: { r: 2, c: 0 } },
+    { s: { r: 0, c: 1 }, e: { r: 2, c: 1 } },
+  ]
+
+  getMonthGroups(matriz.dias).forEach((group) => {
+    const start = 2 + group.startIndex
+    const end = start + group.count - 1
+    merges.push({ s: { r: 0, c: start }, e: { r: 0, c: end } })
+  })
+
+  const summaryStart = 2 + matriz.dias.length
+  merges.push({ s: { r: 0, c: summaryStart }, e: { r: 0, c: summaryStart + 2 } })
+  merges.push({ s: { r: 0, c: summaryStart + 3 }, e: { r: 0, c: summaryStart + 5 } })
+  merges.push({ s: { r: 0, c: summaryStart + 6 }, e: { r: 0, c: summaryStart + 8 } })
+  merges.push({ s: { r: 0, c: summaryStart + 9 }, e: { r: 0, c: summaryStart + 10 } })
+
+  return merges
+}
+
+function applyWorksheetMetadata(sheet, matriz) {
+  const totalColumns = 2 + matriz.dias.length + 11
+
+  sheet['!merges'] = buildMerges(matriz)
+  sheet['!cols'] = [
+    { wch: 5 },
+    { wch: 34 },
+    ...matriz.dias.map(() => ({ wch: 4 })),
+    ...Array.from({ length: 11 }, () => ({ wch: 9 })),
+  ]
+  sheet['!rows'] = [
+    { hpt: 24 },
+    { hpt: 20 },
+    { hpt: 20 },
+    ...matriz.estudiantes.map(() => ({ hpt: 19 })),
+  ]
+  sheet['!freeze'] = { xSplit: 2, ySplit: 3 }
+  sheet['!autofilter'] = {
+    ref: XLSX.utils.encode_range({
+      s: { r: 2, c: 0 },
+      e: { r: Math.max(3, matriz.estudiantes.length + 2), c: totalColumns - 1 },
+    }),
+  }
+}
+
+function applyBestEffortStyles(sheet, matriz) {
+  const range = XLSX.utils.decode_range(sheet['!ref'])
+  const summaryStart = 2 + matriz.dias.length
+
+  for (let row = range.s.r; row <= range.e.r; row += 1) {
+    for (let col = range.s.c; col <= range.e.c; col += 1) {
+      const address = XLSX.utils.encode_cell({ r: row, c: col })
+      const cell = sheet[address]
+      if (!cell) continue
+
+      cell.s = {
+        alignment: {
+          horizontal: col === 1 && row >= 3 ? 'left' : 'center',
+          vertical: 'center',
+          wrapText: true,
+        },
+        border: {
+          top: { style: 'thin', color: { rgb: '000000' } },
+          bottom: { style: 'thin', color: { rgb: '000000' } },
+          left: { style: 'thin', color: { rgb: '000000' } },
+          right: { style: 'thin', color: { rgb: '000000' } },
+        },
+      }
+
+      if (row <= 2) {
+        cell.s.font = { bold: true }
+        cell.s.fill = { fgColor: { rgb: row === 0 ? 'D9E2F3' : 'F2F2F2' } }
+      }
+
+      if (row >= 3) {
+        const student = matriz.estudiantes[row - 3]
+        if (student?.nivel_alerta === 'rojo') {
+          cell.s.fill = { fgColor: { rgb: 'F4CCCC' } }
+        } else if (student?.nivel_alerta === 'amarillo') {
+          cell.s.fill = { fgColor: { rgb: 'FFF2CC' } }
+        }
+
+        if (col >= summaryStart) {
+          cell.s.font = { bold: true }
+        }
+      }
+    }
+  }
+}
+
+function setMonthHeaderValues(sheet, matriz) {
+  getMonthGroups(matriz.dias).forEach((group) => {
+    const address = XLSX.utils.encode_cell({ r: 0, c: 2 + group.startIndex })
+    sheet[address].v = `Mes: ${group.month}`
+  })
+}
+
+function getSafeFileName(matriz) {
+  const safeCourse = matriz.paralelo
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+
+  return `matriz-asistencia-${safeCourse || 'paralelo'}-${matriz.anio_lectivo}.xlsx`
 }
 
 export function downloadMatrizAsistenciaExcel(matriz) {
   if (!matriz) return
 
-  const html = buildHtml(matriz)
-  const blob = new Blob([html], {
-    type: 'application/vnd.ms-excel;charset=utf-8;',
-  })
-  const url = URL.createObjectURL(blob)
-  const link = document.createElement('a')
-  const safeCourse = matriz.paralelo
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '')
+  const rows = buildRows(matriz)
+  const sheet = XLSX.utils.aoa_to_sheet(rows)
+  setMonthHeaderValues(sheet, matriz)
+  applyWorksheetMetadata(sheet, matriz)
+  applyBestEffortStyles(sheet, matriz)
 
-  link.href = url
-  link.download = `matriz-asistencia-${safeCourse || 'paralelo'}-${matriz.anio_lectivo}.xls`
-  document.body.appendChild(link)
-  link.click()
-  document.body.removeChild(link)
-  URL.revokeObjectURL(url)
+  const workbook = XLSX.utils.book_new()
+  workbook.Props = {
+    Title: `Matriz de asistencia ${matriz.paralelo}`,
+    Subject: `Anio lectivo ${matriz.anio_lectivo}`,
+    Author: 'PresenTech',
+  }
+  XLSX.utils.book_append_sheet(workbook, sheet, 'Matriz')
+  XLSX.writeFile(workbook, getSafeFileName(matriz), { bookType: 'xlsx', compression: true })
 }
