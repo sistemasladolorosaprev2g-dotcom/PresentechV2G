@@ -17,10 +17,11 @@ public class AdminOcrController : AdminBaseController
 {
     private const long MaxFileSizeBytes = 8 * 1024 * 1024;
     private static readonly HashSet<string> AllowedContentTypes =
-    [
+    new()
+    {
         "image/jpeg",
         "image/png",
-    ];
+    };
 
     private readonly IOcrService _ocrService;
 

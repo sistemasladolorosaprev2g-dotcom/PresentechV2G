@@ -9,7 +9,7 @@ namespace Presentech.Business.Services
     public class MatrizAsistenciaService : IMatrizAsistenciaService
     {
         private static readonly string[] MonthNames =
-        [
+        {
             "",
             "ENERO",
             "FEBRERO",
@@ -23,7 +23,7 @@ namespace Presentech.Business.Services
             "OCTUBRE",
             "NOVIEMBRE",
             "DICIEMBRE",
-        ];
+        };
 
         private static readonly Dictionary<DayOfWeek, string> DayInitials = new()
         {
@@ -52,9 +52,8 @@ namespace Presentech.Business.Services
             var fechaInicio = new DateOnly(startYear, 9, 1);
             var fechaFin = new DateOnly(startYear + 1, 6, 30);
 
-            var paralelo = await _unitOfWork.ParaleloRepository.GetAll()
-                .AsNoTracking()
-                .FirstOrDefaultAsync(p => p.id_paralelo == idParalelo && p.activo, cancellationToken)
+            var paralelo = (await _unitOfWork.ParaleloRepository.ObtenerTodosActivosAsync(cancellationToken))
+                .FirstOrDefault(p => p.id_paralelo == idParalelo)
                 ?? throw new NotFoundException("Paralelo", idParalelo);
 
             var dias = BuildDays(fechaInicio, fechaFin);

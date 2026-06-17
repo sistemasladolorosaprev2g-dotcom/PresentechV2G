@@ -7,7 +7,7 @@ namespace Presentech.Business.DTOs.MatrizAsistencia
         public string anio_lectivo { get; set; } = string.Empty;
         public DateOnly fecha_inicio { get; set; }
         public DateOnly fecha_fin { get; set; }
-        public IReadOnlyList<MatrizAsistenciaDiaDto> dias { get; set; } = [];
-        public IReadOnlyList<MatrizAsistenciaEstudianteDto> estudiantes { get; set; } = [];
+        public IReadOnlyList<MatrizAsistenciaDiaDto> dias { get; set; } = new List<MatrizAsistenciaDiaDto>();
+        public IReadOnlyList<MatrizAsistenciaEstudianteDto> estudiantes { get; set; } = new List<MatrizAsistenciaEstudianteDto>();
     }
 }

@@ -11,7 +11,7 @@ namespace Presentech.Business.Services
     public partial class OcrService : IOcrService
     {
         private static readonly string[] IgnoredLinePrefixes =
-        [
+        {
             "NO",
             "NRO",
             "APELLIDOS",
@@ -19,7 +19,7 @@ namespace Presentech.Business.Services
             "ASIGNATURA",
             "CURSO",
             "MATUTINA",
-        ];
+        };
 
         private readonly HttpClient _httpClient;
         private readonly AzureOcrOptions _options;
