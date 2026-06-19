@@ -107,11 +107,10 @@ export function DashboardView({ role }) {
                 <p className="text-sm font-medium text-muted-foreground">Estado general</p>
                 <div className="mt-3 flex items-center gap-3">
                   <span
-                    className={`rounded-xl p-2 ${
-                      indicadores.estudiantesRiesgo === 0
+                    className={`rounded-xl p-2 ${indicadores.estudiantesRiesgo === 0
                         ? 'bg-success-bg text-success'
                         : 'bg-warning-bg text-warning'
-                    }`}
+                      }`}
                   >
                     {indicadores.estudiantesRiesgo === 0 ? (
                       <ShieldCheck aria-hidden="true" className="h-5 w-5" />
@@ -194,9 +193,8 @@ function RiskPanel({ estudiantes }) {
       <div className="flex flex-col gap-3 border-b border-border/50 p-5 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
           <span
-            className={`rounded-xl p-2 ${
-              estudiantes.length ? 'bg-warning-bg text-warning' : 'bg-success-bg text-success'
-            }`}
+            className={`rounded-xl p-2 ${estudiantes.length ? 'bg-warning-bg text-warning' : 'bg-success-bg text-success'
+              }`}
           >
             {estudiantes.length ? (
               <AlertTriangle aria-hidden="true" className="h-5 w-5" />
@@ -254,9 +252,8 @@ function AcademicRiskPanel({ alertas }) {
       <div className="flex flex-col gap-3 border-b border-border/50 p-5 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
           <span
-            className={`rounded-xl p-2 ${
-              alertas.length ? 'bg-error/10 text-error' : 'bg-success-bg text-success'
-            }`}
+            className={`rounded-xl p-2 ${alertas.length ? 'bg-error/10 text-error' : 'bg-success-bg text-success'
+              }`}
           >
             {alertas.length ? (
               <BookOpen aria-hidden="true" className="h-5 w-5" />
@@ -265,7 +262,7 @@ function AcademicRiskPanel({ alertas }) {
             )}
           </span>
           <div>
-            <h3 className="font-semibold text-foreground">Rendimiento acad\u00e9mico</h3>
+            <h3 className="font-semibold text-foreground">Rendimiento académico</h3>
             <p className="text-sm text-muted-foreground">Estudiantes con promedio menor a 7.0.</p>
           </div>
         </div>
