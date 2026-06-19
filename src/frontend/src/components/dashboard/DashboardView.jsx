@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   AlertTriangle,
   BarChart3,
@@ -152,7 +153,10 @@ export function DashboardView({ role }) {
             {role === 'admin' ? <MatrizAsistenciaAdmin /> : null}
 
             {role !== 'admin' ? (
-              <RiskPanel estudiantes={dashboardData.estudiantes_en_riesgo ?? []} />
+              <>
+                <RiskPanel estudiantes={dashboardData.estudiantes_en_riesgo ?? []} />
+                <AcademicRiskPanel alertas={dashboardData.alertasCalificaciones ?? []} />
+              </>
             ) : null}
           </div>
         </>
@@ -233,6 +237,67 @@ function RiskPanel({ estudiantes }) {
               </div>
               <span className="inline-flex h-8 min-w-8 items-center justify-center rounded-full bg-error/10 px-2 text-sm font-semibold text-error">
                 {estudiante.numero_faltas}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
+  )
+}
+
+function AcademicRiskPanel({ alertas }) {
+  const navigate = useNavigate()
+
+  return (
+    <section className="overflow-hidden rounded-2xl border border-border/50 bg-card/80 shadow-sm mt-6">
+      <div className="flex flex-col gap-3 border-b border-border/50 p-5 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-3">
+          <span
+            className={`rounded-xl p-2 ${
+              alertas.length ? 'bg-error/10 text-error' : 'bg-success-bg text-success'
+            }`}
+          >
+            {alertas.length ? (
+              <BookOpen aria-hidden="true" className="h-5 w-5" />
+            ) : (
+              <CheckCircle2 aria-hidden="true" className="h-5 w-5" />
+            )}
+          </span>
+          <div>
+            <h3 className="font-semibold text-foreground">Rendimiento acad\u00e9mico</h3>
+            <p className="text-sm text-muted-foreground">Estudiantes con promedio menor a 7.0.</p>
+          </div>
+        </div>
+        <span className="rounded-full bg-error/10 px-3 py-1 text-xs font-semibold text-error">
+          {alertas.length} alertas
+        </span>
+      </div>
+
+      {alertas.length === 0 ? (
+        <div className="p-8 text-center">
+          <CheckCircle2 aria-hidden="true" className="mx-auto h-10 w-10 text-success" />
+          <p className="mt-3 font-medium text-foreground">Excelentes calificaciones</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            No hay estudiantes con bajo rendimiento en este momento.
+          </p>
+        </div>
+      ) : (
+        <div className="divide-y divide-border">
+          {alertas.map((alerta) => (
+            <div
+              key={`${alerta.estudianteId}-${alerta.claseId}`}
+              onClick={() => navigate(`/clases/${alerta.claseId}/calificaciones`)}
+              className="flex items-center justify-between gap-4 p-4 hover:bg-muted/40 cursor-pointer transition-colors"
+            >
+              <div className="min-w-0">
+                <p className="font-medium text-foreground">
+                  {alerta.nombreEstudiante}
+                </p>
+                <p className="text-sm text-muted-foreground">Bajo rendimiento en {alerta.nombreMateria}</p>
+              </div>
+              <span className="inline-flex items-center justify-center rounded-full bg-error/10 px-3 py-1 text-sm font-semibold text-error">
+                Promedio: {alerta.promedioActual.toFixed(2)}
               </span>
             </div>
           ))}

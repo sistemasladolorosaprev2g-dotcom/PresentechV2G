@@ -8,10 +8,12 @@ namespace Presentech.Business.Services
     public class DashboardService : IDashboardService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ICalificacionService _calificacionService;
 
-        public DashboardService(IUnitOfWork unitOfWork)
+        public DashboardService(IUnitOfWork unitOfWork, ICalificacionService calificacionService)
         {
             _unitOfWork = unitOfWork;
+            _calificacionService = calificacionService;
         }
 
         public async Task<DashboardResponse> GetDashboardStatsAsync(int? idProfesor, CancellationToken cancellationToken = default)
@@ -93,6 +95,28 @@ namespace Presentech.Business.Services
 
             response.total_estudiantes_riesgo = response.estudiantes_en_riesgo.Count;
             response.estudiantes_en_riesgo = response.estudiantes_en_riesgo.OrderByDescending(e => e.numero_faltas).ToList();
+
+            // Calcular Alertas de Calificaciones
+            var clasesIds = await clasesQuery.Select(c => c.id_clase).ToListAsync(cancellationToken);
+            foreach (var claseId in clasesIds)
+            {
+                var matriz = await _calificacionService.GetMatrizCalificacionesAsync(claseId);
+                
+                var estudiantesConAlarma = matriz.Estudiantes.Where(e => e.RequiereAlarma).ToList();
+                foreach (var est in estudiantesConAlarma)
+                {
+                    response.AlertasCalificaciones.Add(new AlertaCalificacionDto
+                    {
+                        EstudianteId = est.EstudianteId,
+                        NombreEstudiante = $"{est.Apellidos} {est.Nombres}",
+                        ClaseId = claseId,
+                        NombreMateria = matriz.Materia,
+                        PromedioActual = est.Promedio
+                    });
+                }
+            }
+            
+            response.AlertasCalificaciones = response.AlertasCalificaciones.OrderBy(a => a.PromedioActual).ToList();
 
             return response;
         }

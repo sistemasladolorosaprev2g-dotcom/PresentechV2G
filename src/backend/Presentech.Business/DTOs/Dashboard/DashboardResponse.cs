@@ -7,6 +7,7 @@ namespace Presentech.Business.DTOs.Dashboard
         public int total_estudiantes_riesgo { get; set; }
         public double porcentaje_asistencia_global { get; set; }
         public List<EstudianteRiesgoDTO> estudiantes_en_riesgo { get; set; } = new List<EstudianteRiesgoDTO>();
+        public List<AlertaCalificacionDto> AlertasCalificaciones { get; set; } = new List<AlertaCalificacionDto>();
     }
 
     public class EstudianteRiesgoDTO
@@ -16,5 +17,14 @@ namespace Presentech.Business.DTOs.Dashboard
         public string apellidos { get; set; } = string.Empty;
         public int numero_faltas { get; set; }
         public List<string> clases_afectadas { get; set; } = new List<string>();
+    }
+
+    public class AlertaCalificacionDto
+    {
+        public int EstudianteId { get; set; }
+        public string NombreEstudiante { get; set; } = string.Empty;
+        public int ClaseId { get; set; }
+        public string NombreMateria { get; set; } = string.Empty;
+        public decimal PromedioActual { get; set; }
     }
 }
