@@ -96,6 +96,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<Presentech.DataAccess.Repositories.Interfaces.ICalificacionRepository, Presentech.DataAccess.Repositories.CalificacionRepository>();
         services.AddScoped<ICalificacionService, CalificacionService>();
         
+        services.AddScoped<IRegistroAsistenciaRepository, RegistroAsistenciaRepository>();
+        services.AddScoped<IAsistenciaRepository, AsistenciaRepository>();
         services.AddScoped<IEstudiantePortalService, EstudiantePortalService>();
 
         return services;
