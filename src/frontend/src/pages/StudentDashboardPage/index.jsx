@@ -8,7 +8,6 @@ import { StudentTabs } from '../../components/layout/StudentTabs';
 
 export const StudentDashboardView = () => {
   const [dashboard, setDashboard] = useState(null);
-  const [clases, setClases] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -16,9 +15,6 @@ export const StudentDashboardView = () => {
       try {
         const dashData = await studentService.getDashboard();
         setDashboard(dashData.data);
-        
-        const clasesData = await studentService.getClases();
-        setClases(clasesData.data);
       } catch (error) {
         console.error('Error fetching student dashboard', error);
       } finally {
@@ -71,36 +67,6 @@ export const StudentDashboardView = () => {
               </div>
             )}
 
-            <div className="mt-8">
-              <h3 className="text-lg font-medium text-foreground mb-4">Mis Clases</h3>
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {clases.map((clase) => (
-                  <Link
-                    key={clase.idClase}
-                    to={`/estudiante/clases/${clase.idClase}`}
-                    className="group relative overflow-hidden rounded-xl border border-border/50 bg-card p-5 shadow-sm transition-all hover:shadow-md hover:border-primary/50 flex flex-col"
-                  >
-                    <div className="absolute top-0 left-0 w-1 h-full bg-primary/80" />
-                    <div className="mb-2">
-                      <h4 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
-                        {clase.materia}
-                      </h4>
-                      <p className="text-sm text-muted-foreground">{clase.paralelo}</p>
-                    </div>
-                    <div className="mt-auto pt-4 flex justify-end">
-                      <span className="inline-flex items-center text-xs font-medium text-primary">
-                        Ver Detalles <i className="fa-solid fa-arrow-right ml-1"></i>
-                      </span>
-                    </div>
-                  </Link>
-                ))}
-                {clases.length === 0 && (
-                  <div className="col-span-full rounded-xl border border-dashed border-border/60 bg-card/30 p-8 text-center text-muted-foreground">
-                    No estás matriculado en ninguna clase actualmente.
-                  </div>
-                )}
-              </div>
-            </div>
           </>
         )}
       </section>

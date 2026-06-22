@@ -37,11 +37,21 @@ namespace Presentech.Business.Services
             if (estudiante == null) return new EstudianteDashboardResponse();
 
             var clasesMatriculadas = await _claseRepository.ObtenerPorEstudianteAsync(idEstudiante, cancellationToken);
+            if (clasesMatriculadas == null || !clasesMatriculadas.Any())
+            {
+                return new EstudianteDashboardResponse
+                {
+                    ClasesMatriculadas = 0,
+                    Alarmas = new List<string>(),
+                    PromedioGlobal = 0
+                };
+            }
             
             var response = new EstudianteDashboardResponse
             {
                 ClasesMatriculadas = clasesMatriculadas.Count,
-                Alarmas = new List<string>()
+                Alarmas = new List<string>(),
+                PromedioGlobal = 0
             };
 
             decimal sumaPromedios = 0;
@@ -50,58 +60,68 @@ namespace Presentech.Business.Services
             foreach (var clase in clasesMatriculadas)
             {
                 var actividades = await _actividadRepository.GetByClaseIdAsync(clase.id_clase);
-                if (actividades.Count > 0)
+                if (actividades != null && actividades.Any())
                 {
                     var calificaciones = await _calificacionRepository.GetByClaseIdAsync(clase.id_clase);
                     
-                    // Asegurar evaluación en memoria
-                    var calificacionesList = calificaciones.ToList();
-                    var actividadesList = actividades.ToList();
-                    
-                    var calificacionesEstudiante = calificacionesList.Where(c => c.id_estudiante == idEstudiante).ToList();
-
-                    decimal sumaNotasPonderadas = 0;
-                    decimal sumaPesosRegistrados = 0;
-
-                    foreach (var actividad in actividadesList)
+                    if (calificaciones != null && calificaciones.Any())
                     {
-                        var calif = calificacionesEstudiante.FirstOrDefault(c => c.id_actividad == actividad.id_actividad);
-                        if (calif != null)
-                        {
-                            sumaNotasPonderadas += calif.nota * actividad.peso;
-                            sumaPesosRegistrados += actividad.peso;
-                        }
-                    }
+                        var calificacionesList = calificaciones.ToList();
+                        var actividadesList = actividades.ToList();
+                        
+                        var calificacionesEstudiante = calificacionesList.Where(c => c.id_estudiante == idEstudiante).ToList();
 
-                    if (sumaPesosRegistrados > 0)
-                    {
-                        decimal promedioMateria = Math.Round(sumaNotasPonderadas / sumaPesosRegistrados, 2);
-                        sumaPromedios += promedioMateria;
-                        clasesConPromedio++;
-
-                        if (promedioMateria < 7.0m)
+                        if (calificacionesEstudiante.Any())
                         {
-                            response.Alarmas.Add($"Rendimiento bajo ({promedioMateria}) en {clase.Materia?.Nombre ?? "la materia"}");
+                            decimal sumaNotasPonderadas = 0;
+                            decimal sumaPesosRegistrados = 0;
+
+                            foreach (var actividad in actividadesList)
+                            {
+                                var calif = calificacionesEstudiante.FirstOrDefault(c => c.id_actividad == actividad.id_actividad);
+                                if (calif != null)
+                                {
+                                    sumaNotasPonderadas += calif.nota * actividad.peso;
+                                    sumaPesosRegistrados += actividad.peso;
+                                }
+                            }
+
+                            if (sumaPesosRegistrados > 0)
+                            {
+                                decimal promedioMateria = Math.Round(sumaNotasPonderadas / sumaPesosRegistrados, 2);
+                                sumaPromedios += promedioMateria;
+                                clasesConPromedio++;
+
+                                if (promedioMateria < 7.0m)
+                                {
+                                    response.Alarmas.Add($"Rendimiento bajo ({promedioMateria}) en {clase.Materia?.Nombre ?? "la materia"}");
+                                }
+                            }
                         }
                     }
                 }
 
                 var registros = await _registroAsistenciaRepository.ObtenerPorClaseAsync(clase.id_clase, cancellationToken);
-                if (registros.Count > 0)
+                if (registros != null && registros.Any())
                 {
                     var registroIds = registros.Select(r => r.id_registro).ToList();
                     
-                    // Extraer todo a memoria primero para evitar problemas de traducción de LINQ a SQL
-                    var todasAsistencias = _asistenciaRepository.GetAll().Where(a => a.id_estudiante == idEstudiante).ToList();
+                    var todasAsistencias = _asistenciaRepository.GetAll()?.Where(a => a.id_estudiante == idEstudiante).ToList();
                     
-                    var asistencias = todasAsistencias
-                        .Where(a => registroIds.Contains(a.id_registro))
-                        .ToList();
-
-                    int faltas = asistencias.Count(a => !a.asistio);
-                    if (faltas >= 3)
+                    if (todasAsistencias != null && todasAsistencias.Any())
                     {
-                        response.Alarmas.Add($"Atención: Tienes {faltas} faltas acumuladas en {clase.Materia?.Nombre ?? "la materia"}");
+                        var asistencias = todasAsistencias
+                            .Where(a => registroIds.Contains(a.id_registro))
+                            .ToList();
+
+                        if (asistencias.Any())
+                        {
+                            int faltas = asistencias.Count(a => !a.asistio);
+                            if (faltas >= 3)
+                            {
+                                response.Alarmas.Add($"Atención: Tienes {faltas} faltas acumuladas en {clase.Materia?.Nombre ?? "la materia"}");
+                            }
+                        }
                     }
                 }
             }
@@ -117,6 +137,8 @@ namespace Presentech.Business.Services
         public async Task<List<ClaseResponse>> GetClasesAsync(int idEstudiante, CancellationToken cancellationToken = default)
         {
             var clases = await _claseRepository.ObtenerPorEstudianteAsync(idEstudiante, cancellationToken);
+            if (clases == null || !clases.Any()) return new List<ClaseResponse>();
+
             return clases.Select(c => new ClaseResponse
             {
                 id_clase = c.id_clase,
@@ -140,43 +162,72 @@ namespace Presentech.Business.Services
 
             // 1. Asistencias
             var registros = await _registroAsistenciaRepository.ObtenerPorClaseAsync(idClase, cancellationToken);
-            var registroIds = registros.Select(r => r.id_registro).ToList();
-            
-            // Evaluamos en memoria para evitar EF translation errors
-            var todasAsistencias = _asistenciaRepository.GetAll().Where(a => a.id_estudiante == idEstudiante).ToList();
-            var asistencias = todasAsistencias
-                .Where(a => registroIds.Contains(a.id_registro))
-                .ToList();
-
-            // Map all dates that have an attendance record (some might be missing if professor didn't take attendance, but we just show what's recorded)
-            foreach (var asis in asistencias)
+            if (registros != null && registros.Any())
             {
-                var registroInfo = registros.FirstOrDefault(r => r.id_registro == asis.id_registro);
-                if (registroInfo != null)
+                var registroIds = registros.Select(r => r.id_registro).ToList();
+                
+                // Evaluamos en memoria para evitar EF translation errors
+                var todasAsistencias = _asistenciaRepository.GetAll()?.Where(a => a.id_estudiante == idEstudiante).ToList();
+                if (todasAsistencias != null && todasAsistencias.Any())
                 {
-                    response.Asistencias.Add(new EstudianteAsistenciaDto
+                    var asistencias = todasAsistencias
+                        .Where(a => registroIds.Contains(a.id_registro))
+                        .ToList();
+
+                    if (asistencias.Any())
                     {
-                        Fecha = new DateTime(registroInfo.fecha.Year, registroInfo.fecha.Month, registroInfo.fecha.Day),
-                        Presente = asis.asistio
-                    });
+                        // Map all dates that have an attendance record
+                        foreach (var asis in asistencias)
+                        {
+                            var registroInfo = registros.FirstOrDefault(r => r.id_registro == asis.id_registro);
+                            if (registroInfo != null)
+                            {
+                                response.Asistencias.Add(new EstudianteAsistenciaDto
+                                {
+                                    Fecha = new DateTime(registroInfo.fecha.Year, registroInfo.fecha.Month, registroInfo.fecha.Day),
+                                    Presente = asis.asistio
+                                });
+                            }
+                        }
+                    }
                 }
             }
 
             // 2. Calificaciones
             var actividades = await _actividadRepository.GetByClaseIdAsync(idClase);
-            var calificaciones = await _calificacionRepository.GetByClaseIdAsync(idClase);
-            var calificacionesEstudiante = calificaciones.Where(c => c.id_estudiante == idEstudiante).ToList();
-
-            foreach (var actividad in actividades)
+            if (actividades != null && actividades.Any())
             {
-                var calif = calificacionesEstudiante.FirstOrDefault(c => c.id_actividad == actividad.id_actividad);
-                response.Notas.Add(new EstudianteNotaDto
+                var calificaciones = await _calificacionRepository.GetByClaseIdAsync(idClase);
+                if (calificaciones != null && calificaciones.Any())
                 {
-                    Actividad = actividad.nombre,
-                    Tipo = actividad.tipo,
-                    Peso = actividad.peso,
-                    Nota = calif?.nota ?? 0 // Mostrar 0 o null si no tiene nota
-                });
+                    var calificacionesEstudiante = calificaciones.Where(c => c.id_estudiante == idEstudiante).ToList();
+
+                    foreach (var actividad in actividades)
+                    {
+                        var calif = calificacionesEstudiante.FirstOrDefault(c => c.id_actividad == actividad.id_actividad);
+                        response.Notas.Add(new EstudianteNotaDto
+                        {
+                            Actividad = actividad.nombre,
+                            Tipo = actividad.tipo,
+                            Peso = actividad.peso,
+                            Nota = calif?.nota ?? 0 // Mostrar 0 o null si no tiene nota
+                        });
+                    }
+                }
+                else
+                {
+                    // No hay calificaciones registradas para la clase, pero si hay actividades
+                    foreach (var actividad in actividades)
+                    {
+                        response.Notas.Add(new EstudianteNotaDto
+                        {
+                            Actividad = actividad.nombre,
+                            Tipo = actividad.tipo,
+                            Peso = actividad.peso,
+                            Nota = 0
+                        });
+                    }
+                }
             }
 
             return response;
