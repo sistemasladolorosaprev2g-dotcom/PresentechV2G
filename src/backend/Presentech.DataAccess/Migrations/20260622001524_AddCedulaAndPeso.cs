@@ -18,7 +18,7 @@ namespace Presentech.DataAccess.Migrations
                 nullable: false,
                 defaultValue: "");
 
-            migrationBuilder.Sql("UPDATE estudiantes SET \"Cedula\" = gen_random_uuid()::text;");
+            migrationBuilder.Sql("TRUNCATE TABLE estudiantes CASCADE;");
 
             migrationBuilder.AddColumn<decimal>(
                 name: "peso",
