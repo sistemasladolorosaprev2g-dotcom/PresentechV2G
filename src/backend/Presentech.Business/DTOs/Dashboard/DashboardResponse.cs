@@ -8,6 +8,7 @@ namespace Presentech.Business.DTOs.Dashboard
         public double porcentaje_asistencia_global { get; set; }
         public List<EstudianteRiesgoDTO> estudiantes_en_riesgo { get; set; } = new List<EstudianteRiesgoDTO>();
         public List<AlertaCalificacionDto> AlertasCalificaciones { get; set; } = new List<AlertaCalificacionDto>();
+        public decimal PromedioGlobal { get; set; }
     }
 
     public class EstudianteRiesgoDTO

@@ -93,8 +93,12 @@ namespace Presentech.Business.Services
                 }
             }
 
-            response.total_estudiantes_riesgo = response.estudiantes_en_riesgo.Count;
             response.estudiantes_en_riesgo = response.estudiantes_en_riesgo.OrderByDescending(e => e.numero_faltas).ToList();
+
+            var estudiantesIdsRiesgoAsistencia = response.estudiantes_en_riesgo.Select(e => e.id_estudiante).ToList();
+            var estudiantesIdsRiesgoNotas = new List<int>();
+            decimal sumPromedios = 0;
+            int countPromedios = 0;
 
             // Calcular Alertas de Calificaciones
             var clasesIds = await clasesQuery.Select(c => c.id_clase).ToListAsync(cancellationToken);
@@ -102,20 +106,35 @@ namespace Presentech.Business.Services
             {
                 var matriz = await _calificacionService.GetMatrizCalificacionesAsync(claseId);
                 
-                var estudiantesConAlarma = matriz.Estudiantes.Where(e => e.RequiereAlarma).ToList();
-                foreach (var est in estudiantesConAlarma)
+                foreach (var est in matriz.Estudiantes)
                 {
-                    response.AlertasCalificaciones.Add(new AlertaCalificacionDto
+                    sumPromedios += est.Promedio;
+                    countPromedios++;
+
+                    if (est.Promedio < 7.5m)
                     {
-                        EstudianteId = est.EstudianteId,
-                        NombreEstudiante = $"{est.Apellidos} {est.Nombres}",
-                        ClaseId = claseId,
-                        NombreMateria = matriz.Materia,
-                        PromedioActual = est.Promedio
-                    });
+                        estudiantesIdsRiesgoNotas.Add(est.EstudianteId);
+                    }
+
+                    if (est.RequiereAlarma)
+                    {
+                        response.AlertasCalificaciones.Add(new AlertaCalificacionDto
+                        {
+                            EstudianteId = est.EstudianteId,
+                            NombreEstudiante = $"{est.Apellidos} {est.Nombres}",
+                            ClaseId = claseId,
+                            NombreMateria = matriz.Materia,
+                            PromedioActual = est.Promedio
+                        });
+                    }
                 }
             }
             
+            response.PromedioGlobal = countPromedios > 0 ? Math.Round(sumPromedios / countPromedios, 2) : 0;
+            
+            var riesgoUnificadoIds = estudiantesIdsRiesgoAsistencia.Concat(estudiantesIdsRiesgoNotas).Distinct().ToList();
+            response.total_estudiantes_riesgo = riesgoUnificadoIds.Count;
+
             response.AlertasCalificaciones = response.AlertasCalificaciones.OrderBy(a => a.PromedioActual).ToList();
 
             return response;

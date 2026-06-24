@@ -38,7 +38,7 @@ export function DashboardView({ role }) {
   const indicadores = useMemo(() => {
     const data = dashboardData ?? {}
     const asistencia = data.porcentaje_asistencia_global ?? 0
-    const estudiantesRiesgo = data.estudiantes_en_riesgo?.length ?? 0
+    const estudiantesRiesgo = data.total_estudiantes_riesgo ?? 0
 
     return {
       asistencia,
@@ -125,7 +125,7 @@ export function DashboardView({ role }) {
           </section>
 
           <div className="min-w-0 space-y-6">
-            <div className="grid gap-4 md:grid-cols-3">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               <MetricCard
                 icon={Users}
                 label="Total estudiantes"
@@ -147,6 +147,14 @@ export function DashboardView({ role }) {
                 value={`${indicadores.asistencia.toFixed(1)}%`}
                 description="Promedio global"
               />
+              <MetricCard
+                icon={BookOpen}
+                label="Nota promedio del curso"
+                tone="success"
+                value={dashboardData.promedioGlobal?.toFixed(2) ?? '0.00'}
+                valueClassName={(dashboardData.promedioGlobal ?? 0) >= 7.5 ? 'text-success' : 'text-warning'}
+                description="Promedio global"
+              />
             </div>
 
             {role === 'admin' ? <MatrizAsistenciaAdmin /> : null}
@@ -164,7 +172,7 @@ export function DashboardView({ role }) {
   )
 }
 
-function MetricCard({ description, icon: Icon, label, tone, value }) {
+function MetricCard({ description, icon: Icon, label, tone, value, valueClassName = "text-foreground" }) {
   const toneClasses = {
     primary: 'bg-primary/10 text-primary',
     success: 'bg-success-bg text-success',
@@ -176,7 +184,7 @@ function MetricCard({ description, icon: Icon, label, tone, value }) {
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className="text-sm font-medium text-muted-foreground">{label}</p>
-          <p className="mt-2 text-3xl font-bold text-foreground">{value}</p>
+          <p className={`mt-2 text-3xl font-bold ${valueClassName}`}>{value}</p>
           <p className="mt-1 text-xs text-muted-foreground">{description}</p>
         </div>
         <span className={`rounded-xl p-3 ${toneClasses[tone]}`}>
