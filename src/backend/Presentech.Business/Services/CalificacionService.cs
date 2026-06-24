@@ -36,7 +36,7 @@ namespace Presentech.Business.Services
                 id_clase = request.ClaseId,
                 nombre = request.Nombre,
                 tipo = request.Tipo,
-                fecha = request.Fecha,
+                fecha = request.Fecha ?? DateTime.UtcNow,
                 peso = request.Peso,
                 activo = true,
                 created_at = DateTime.UtcNow
@@ -62,7 +62,7 @@ namespace Presentech.Business.Services
 
             actividad.nombre = request.Nombre;
             actividad.tipo = request.Tipo;
-            actividad.fecha = request.Fecha;
+            // actividad.fecha = request.Fecha; // Fecha is immutable
             actividad.peso = request.Peso;
 
             await _actividadRepository.UpdateAsync(actividad);

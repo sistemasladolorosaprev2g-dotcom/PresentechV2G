@@ -194,7 +194,7 @@ namespace Presentech.Business.Services
             var fechaInicioDateTime = fechaInicio.ToDateTime(TimeOnly.MinValue);
             var fechaFinDateTime = fechaFin.ToDateTime(TimeOnly.MaxValue);
 
-            actividades = actividades.Where(a => a.fecha >= fechaInicioDateTime && a.fecha <= fechaFinDateTime).ToList();
+            actividades = actividades.Where(a => !a.fecha.HasValue || (a.fecha.Value >= fechaInicioDateTime && a.fecha.Value <= fechaFinDateTime)).ToList();
             var actividadesIds = actividades.Select(a => a.id_actividad).ToList();
 
             var calificaciones = await _calificacionRepository.GetByClaseIdAsync(idClase);
