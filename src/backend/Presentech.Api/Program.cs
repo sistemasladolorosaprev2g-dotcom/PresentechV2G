@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore; 
 using Presentech.DataAccess.Context; 
 using Presentech.Api.Extensions;
@@ -6,6 +7,14 @@ using Presentech.Api.Middleware;
 var builder = WebApplication.CreateBuilder(args);
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
+// Configurar ForwardedHeaders para que Render/proxies pasen correctamente la IP y esquema HTTPS
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    options.KnownNetworks.Clear();
+    options.KnownProxies.Clear();
+});
 
 builder.Services.AddControllers();
 builder.Services.AddCustomApiVersioning();
@@ -19,23 +28,26 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<PresentechDbContext>();
-    db.Database.Migrate(); // Esto lee tus modelos y crea las tablas en PostgreSQL
+    db.Database.Migrate();
 }
 
+// ForwardedHeaders debe ir primero para que el resto del pipeline vea el esquema correcto
+app.UseForwardedHeaders();
 
-if (app.Environment.IsDevelopment())
+// Swagger siempre habilitado
+app.UseSwagger();
+app.UseSwaggerUI(options =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(options =>
-    {
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", "PresenTech API v1");
-        options.RoutePrefix = "swagger";
-    });
-}
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "PresenTech API v1");
+    options.RoutePrefix = "swagger";
+});
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseCors("CorsPolicy");
-app.UseHttpsRedirection();
+
+// NO usar UseHttpsRedirection en Render: el proxy ya maneja HTTPS externamente
+// app.UseHttpsRedirection();
+
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
