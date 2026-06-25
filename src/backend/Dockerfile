@@ -30,7 +30,6 @@ EXPOSE 8081
 
 # Tell ASP.NET Core to listen on port 8080
 ENV ASPNETCORE_URLS=http://+:8080
-# Set environment to Production by default for container deployments
-ENV ASPNETCORE_ENVIRONMENT=Production
+# ASPNETCORE_ENVIRONMENT se configura como variable en Render (Development o Production)
 
 ENTRYPOINT ["dotnet", "Presentech.Api.dll"]
